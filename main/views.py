@@ -21,16 +21,31 @@ def image_upload_view(request):
             im_name = form.cleaned_data['image'].name
             im_path = os.path.join(settings.MEDIA_ROOT,"images", im_name)
 
-            #####call the algo
-            img_proc = detect.process(im_path)
-            im_name = "proc" + im_name
+            #####call the vision algo and extract image, image processed, image name and datas
+            img_proc = detect.process(im_path)[0]
+            img_proc_datas = detect.process(im_path)[1]
+            im_name = "proc_" + im_name
             img_proc_pathtosave = os.path.join(settings.STATIC_ROOT,"main", "img", im_name)
-            print("XXXXXX path to save: ", img_proc_pathtosave,"XXXXXXXXXX")
+            print("XXXXXX path to save: ", img_proc_pathtosave)
 
+            #save the image processed to statics et the datas
             cv2.imwrite(img_proc_pathtosave, img_proc)
             # print(" XXXXXXXXXXXX ", form.cleaned_data['image'].name," XXXXXXXXXX ", im_path)
+            img_proc_datas_name = "data_" + im_name + ".txt"
+            img_proc_datas_pathtosave = os.path.join(settings.STATIC_ROOT,"main", "datas", img_proc_datas_name)
 
-            return render(request, 'main/index.html', {'form': form, 'img_obj': img_obj, 'img_proc': img_proc_pathtosave})
+            #img_proc_datas_pathtosave = ("/").join(img_proc_datas_pathtosave.split("\\"))
+            print("XXXXXX path for data to save: ", img_proc_datas_pathtosave)
+            with open(img_proc_datas_pathtosave, "w", encoding="utf-8") as file:
+                for line in img_proc_datas:
+                    file.write(line + "\n")
+
+
+            return render(request, 'main/index.html', {'form': form,
+                                                       'img_obj': img_obj,
+                                                       'img_proc': img_proc_pathtosave,
+                                                       'img_proc_datas': img_proc_datas,
+                                                       })
     else:
         form = ImageForm()
     return render(request, 'main/index.html', {'form': form})

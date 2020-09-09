@@ -21,7 +21,8 @@ def process(img_adress):
     hImg, wImg,_ = img.shape
     ##character xpoint ypoint width heigth
     boxes = pytesseract.image_to_boxes(img)
-    for b in boxes.splitlines():
+    boxes_splitted = boxes.splitlines()
+    for b in boxes_splitted:
         #print(b)
         b = b.split(' ')
         x,y,w,h = int( b[1]), int(b[2]), int(b[3]),int(b[4])
@@ -35,6 +36,8 @@ def process(img_adress):
     # cv2.imshow('reult', img)
     # cv2.waitKey(0)
 
-    return img
+    boxes_splitted = pytesseract.image_to_string(img).splitlines()
+
+    return (img, boxes_splitted)
 
 #process(img_add)
