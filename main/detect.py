@@ -2,35 +2,39 @@ import cv2
 import pytesseract
 
 
-img_adress = ""
-#https://www.murtazahassan.com/courses/opencv-projects/
-#control + left click
-pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+img_add = 'D4\\main\\static\\main\\img\\produit01.jpg'
+def process(img_adress):
+    #https://www.murtazahassan.com/courses/opencv-projects/
+    #control + left click
+    pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
-img = cv2.imread('D4\\main\\static\\main\\img\\produit01.jpg')
-#pytesseract only accept rgb, so we convert bgr to rgb
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.imread(img_adress)
+    #pytesseract only accept rgb, so we convert bgr to rgb
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-##Detecting characters and their position
-#print(pytesseract.image_to_string(img))
-##character xpoint ypoint width heigth
-#print(pytesseract.image_to_boxes(img))
+    ##Detecting characters and their position
+    #print(pytesseract.image_to_string(img))
+    ##character xpoint ypoint width heigth
+    #print(pytesseract.image_to_boxes(img))
 
-#taille
-hImg, wImg,_ = img.shape
-##character xpoint ypoint width heigth
-boxes = pytesseract.image_to_boxes(img)
-for b in boxes.splitlines():
-    print(b)
-    b = b.split(' ')
-    x,y,w,h = int( b[1]), int(b[2]), int(b[3]),int(b[4])
+    #taille
+    hImg, wImg,_ = img.shape
+    ##character xpoint ypoint width heigth
+    boxes = pytesseract.image_to_boxes(img)
+    for b in boxes.splitlines():
+        #print(b)
+        b = b.split(' ')
+        x,y,w,h = int( b[1]), int(b[2]), int(b[3]),int(b[4])
 
-    # cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 1)
-    cv2.rectangle(img, (x,hImg - y), (w, hImg - h), (50, 50, 255), 2)
+        # cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 1)
+        cv2.rectangle(img, (x,hImg - y), (w, hImg - h), (50, 50, 255), 2)
 
-    #ecrire le caracteres dessus
-    cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 255, 50), 2)
+        #ecrire le caracteres dessus
+        cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 255, 50), 2)
 
-cv2.imshow('reult', img)
-cv2.waitKey(0)
+    # cv2.imshow('reult', img)
+    # cv2.waitKey(0)
 
+    return img
+
+#process(img_add)

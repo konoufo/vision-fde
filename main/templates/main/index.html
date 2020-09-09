@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
+
+      {% load static %}
+
+
 </head>
 <body>
 
@@ -14,7 +18,14 @@
 
     {% if img_obj %}
       <h3>Succesfully uploaded : {{img_obj.title}}</h3>
-      <img src="{{ img_obj.image.url}}" alt="connect" style="max-height:300px">
+      <img src="{{ img_obj.image.url }}" alt="connect" style="max-height:800px">
+      <img src="{% static 'main/img/' %} + {{img_proc}}" alt="connect" style="max-height:800px">
     {% endif %}
+
+<!--    {% if img_obj2 %}-->
+<!--      <h3>Succesfully uploaded : {{img_obj2.title}}</h3>-->
+<!--      <img src="{{ img_obj2.image.url}}" alt="connect" style="max-height:300px">-->
+<!--    {% endif %}-->
+
 </body>
 </html>
