@@ -6,3 +6,10 @@ django
 opencv-python
 tesseract
 pytesseract
+
+langages:
+python
+html
+css
+javascript
+sql
