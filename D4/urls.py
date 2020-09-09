@@ -16,11 +16,16 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.shortcuts import render
 from django.urls import path, include
+
+
 
 urlpatterns = [
     path('main/', include('main.urls')),
     path('admin/', admin.site.urls),
+    path('', include('main.urls')),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
