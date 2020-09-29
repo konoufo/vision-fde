@@ -100,7 +100,6 @@ def find_only_digits(img_address):
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
     img = cv2.imread(img_address)
-    cv2
     # pytesseract only accept rgb, so we convert bgr to rgb
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     #############################################
@@ -108,7 +107,7 @@ def find_only_digits(img_address):
     #############################################
     hImg, wImg,_ = img.shape
     conf = r'--oem 3 --psm 6 outputbase digits'
-    boxes = pytesseract.image_to_boxes(img,config=conf)
+    boxes = pytesseract.image_to_boxes(img, config=conf)
 
     boxes_splitted = boxes.splitlines()
     for b in boxes_splitted:
