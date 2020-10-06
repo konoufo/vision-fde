@@ -9,8 +9,8 @@ import cv2
 
 #image = cv2.imread(args["image"])
 
-add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\produit01.jpg"
-image = cv2.imread(add)
+path = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\produit01.jpg"
+image = cv2.imread(path)
 
 barcodes = pyzbar.decode(image)
 

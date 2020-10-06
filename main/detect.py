@@ -1,9 +1,11 @@
 import cv2
 import pytesseract
 import unicodedata
-
+#https://www.inspection.gc.ca/exigences-en-matiere-d-etiquetage-des-aliments/etiquetage/industrie/etiquetage-nutritionnel/fra/1386881685057/1386881685870
 #img_add = 'D4\\main\\static\\main\\img\\produit01.jpg'
-img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\produit01.jpg"
+# img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\general\\produit02.jpg"
+#img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\ingredients\\images (29).jpg"
+img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\codesBarre\\téléchargement (5).jpg"
 def process(img_adress):
     #https://www.murtazahassan.com/courses/opencv-projects/
     #control + left click
@@ -35,8 +37,8 @@ def process(img_adress):
         #ecrire le caracteres dessus
         cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 255, 50), 2)
 
-    cv2.imshow('result', img)
-    cv2.waitKey(0)
+    # cv2.imshow('result', img)
+    # cv2.waitKey(0)
 
     return (img, boxes_splitted, boxes_stringed)
 
@@ -61,8 +63,8 @@ def find_characters(img_address):
         cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 2)
         cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 255), 2)
 
-    cv2.imshow('img', img)
-    cv2.waitKey(0)
+    # cv2.imshow('img', img)
+    # cv2.waitKey(0)
 
     return boxes_splitted
 
@@ -94,8 +96,8 @@ def find_words(img_address):
                     cv2.rectangle(img, (x,y), (x+w, y+h), (50, 50, 255), 2)
                     text_splitted.append(b[11])
 
-    cv2.imshow('img', img_o)
-    cv2.waitKey(0)
+    # cv2.imshow('img', img_o)
+    # cv2.waitKey(0)
 
     return (boxes_splitted, text_splitted)
 
@@ -128,7 +130,7 @@ def find_only_digits(img_address):
 
 #process(img_add)
 #bc_splitted = find_characters(img_add)
-bw_splitted = find_words(img_add)
+# bw_splitted = find_words(img_add)
 #bd_splitted = find_only_digits(img_add)
 
 #########
@@ -144,43 +146,44 @@ bw_splitted = find_words(img_add)
 #         fin = i
 #         break
 
-deb =0
-fin =0
-
-for i in range(0, len(bw_splitted[1])):
-    #print(i)
-    index_ingredient = bw_splitted[1][i].lower().find("ingrédient")
-
-    if index_ingredient != -1:
-        print("index: ", index_ingredient, " - content: ", bw_splitted[1][i])
-        deb = i
-        for j in range(i, len(bw_splitted[1])):
-            index_fin_ingredient = bw_splitted[1][j].lower().find(".")
-            if index_fin_ingredient != -1:
-                fin = j
-                break
-        break
-
-ingredients = bw_splitted[1][deb:fin+1]
-print(ingredients)
-
-deb =0
-fin =0
-
-for i in range(0, len(bw_splitted[1])):
-    #print(i)
-    index_ingredient = bw_splitted[1][i].lower().find("Valeur")
-
-    if index_ingredient != -1:
-        print("index: ", index_ingredient, " - content: ", bw_splitted[1][i])
-        deb = i
-        for j in range(i, len(bw_splitted[1])):
-            index_fin_ingredient = bw_splitted[1][j].lower().find(".")
-            if index_fin_ingredient != -1:
-                fin = j
-                break
-        break
-
-valeursnutritives = bw_splitted[1][deb:fin+1]
-print(valeursnutritives)
-
+# uncomment
+# deb =0
+# fin =0
+#
+# for i in range(0, len(bw_splitted[1])):
+#     #print(i)
+#     index_ingredient = bw_splitted[1][i].lower().find("ingrédient")
+#
+#     if index_ingredient != -1:
+#         print("index: ", index_ingredient, " - content: ", bw_splitted[1][i])
+#         deb = i
+#         for j in range(i, len(bw_splitted[1])):
+#             index_fin_ingredient = bw_splitted[1][j].lower().find(".")
+#             if index_fin_ingredient != -1:
+#                 fin = j
+#                 break
+#         break
+#
+# ingredients = bw_splitted[1][deb:fin+1]
+# print(ingredients)
+#
+# deb =0
+# fin =0
+#
+# for i in range(0, len(bw_splitted[1])):
+#     #print(i)
+#     index_ingredient = bw_splitted[1][i].lower().find("Valeur")
+#
+#     if index_ingredient != -1:
+#         print("index: ", index_ingredient, " - content: ", bw_splitted[1][i])
+#         deb = i
+#         for j in range(i, len(bw_splitted[1])):
+#             index_fin_ingredient = bw_splitted[1][j].lower().find(".")
+#             if index_fin_ingredient != -1:
+#                 fin = j
+#                 break
+#         break
+#
+# valeursnutritives = bw_splitted[1][deb:fin+1]
+# print(valeursnutritives)
+#
