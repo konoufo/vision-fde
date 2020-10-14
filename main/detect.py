@@ -204,139 +204,141 @@ def detect_contours(img_address):
 
 
 start_time = time.time()
-img, sub_fig = detect_contours(img_add)
-# cv2.imshow('contours', img)
-# cv2.imwrite('p_contours.jpg', img)
-# cv2.waitKey(0)
-#
-#process(img_add)
-img1, bc_splitted = find_characters(img)
-# cv2.imshow('only characters', img1)
-# cv2.imwrite('p_characters.jpg', img1)
-# cv2.waitKey(0)
 
-img2, bw_splitted, text_splitted, bw_l1, bw_l2 = find_words(img)
-# cv2.imshow('words', img2)
-# cv2.imwrite('p_mots.jpg', img2)
-# cv2.waitKey(0)
+def mainproc(img_add):
+    img, sub_fig = detect_contours(img_add)
+    # cv2.imshow('contours', img)
+    # cv2.imwrite('p_contours.jpg', img)
+    # cv2.waitKey(0)
+    #
+    #process(img_add)
+    img1, bc_splitted = find_characters(img)
+    # cv2.imshow('only characters', img1)
+    # cv2.imwrite('p_characters.jpg', img1)
+    # cv2.waitKey(0)
 
-
-cv2.drawContours(img, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
-cv2.drawContours(img, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
-cv2.drawContours(img2, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
-cv2.drawContours(img2, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
-# cv2.imshow('words+contours', img2)
-# cv2.imwrite('p_mots_contours_tableaux.jpg', img2)
-# cv2.waitKey(0)
-
-img3, bod_splitted = find_only_digits(img)
-# cv2.imshow('only digits', img3)
-# cv2.waitKey(0)
-
-img4, bnd_splitted, bnd_l1, bnd_l2 = find_nutrition_digits(img)
-# cv2.imshow('nutrition digits', img4)
-# cv2.imwrite('p_nutritiondigit.jpg', img4)
-# cv2.waitKey(0)
-#########
-
-# for i, val in enumerate(text_splitted):
-#     #print(i)
-#     index_ingredient = val.lower().find("ingrédient")
-#     index_fin_ingredient = val.lower().find(".")
-#     if index_ingredient != -1:
-#         print("index: ", index_ingredient, " - content: ", val)
-#         deb = i
-#     if index_fin_ingredient != -1 :
-#         fin = i
-#         break
-
-# uncomment
+    img2, bw_splitted, text_splitted, bw_l1, bw_l2 = find_words(img)
+    # cv2.imshow('words', img2)
+    # cv2.imwrite('p_mots.jpg', img2)
+    # cv2.waitKey(0)
 
 
-deb =0
-fin =0
+    cv2.drawContours(img, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
+    cv2.drawContours(img, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
+    cv2.drawContours(img2, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
+    cv2.drawContours(img2, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
+    # cv2.imshow('words+contours', img2)
+    # cv2.imwrite('p_mots_contours_tableaux.jpg', img2)
+    # cv2.waitKey(0)
 
-for i in range(0, len(text_splitted)):
-    #print(i)
-    index_ingredient = text_splitted[i].lower().find("ingrédient")
+    img3, bod_splitted = find_only_digits(img)
+    # cv2.imshow('only digits', img3)
+    # cv2.waitKey(0)
 
-    if index_ingredient != -1:
-        #print("index: ", index_ingredient, " - content: ", text_splitted[i])
-        deb = i
-        for j in range(i, len(text_splitted)):
-            index_fin_ingredient = text_splitted[j].lower().find(".")
-            if index_fin_ingredient != -1:
-                fin = j
-                break
-        break
+    img4, bnd_splitted, bnd_l1, bnd_l2 = find_nutrition_digits(img)
+    # cv2.imshow('nutrition digits', img4)
+    # cv2.imwrite('p_nutritiondigit.jpg', img4)
+    # cv2.waitKey(0)
+    #########
 
-ingredients = text_splitted[deb:fin+1]
-# print(ingredients)
-with open("p_ingredients.txt", "w", encoding="utf-8") as file:
-    for line in ingredients:
-        file.write(line + "\n")
+    # for i, val in enumerate(text_splitted):
+    #     #print(i)
+    #     index_ingredient = val.lower().find("ingrédient")
+    #     index_fin_ingredient = val.lower().find(".")
+    #     if index_ingredient != -1:
+    #         print("index: ", index_ingredient, " - content: ", val)
+    #         deb = i
+    #     if index_fin_ingredient != -1 :
+    #         fin = i
+    #         break
 
-""""
-https://www.canada.ca/fr/sante-canada/services/comprendre-etiquetage-aliments/tableau-valeur-nutritive.html
-Il vous donne également des renseignements sur les 13 principaux nutriments :
+    # uncomment
 
-les lipides
-les lipides saturés
-les lipides trans
-le cholestérol
-le sodium
-les glucides
-les fibres
-les sucres
-les protéines
-la vitamine A
-la vitamine C
-le calcium
-le fer
-Le saviez-vous?
-Il y a 13 principaux nutriments qui doivent figurer sur un tableau de la valeur nutritive. Cependant, voici une liste de certains des nutriments qui sont optionnels :
 
-le folate
-le magnésium
-la niacine
-le phosphore
-le potassium
-la riboflavine
-le sélénium
-la thiamine
-la vitamine B12
-la vitamine B6
-la vitamine D
-la vitamine E
-le zinc
-"""
+    deb =0
+    fin =0
 
-l = bw_l1 + bnd_l2
-l_int = []
-for i in l:
-     l_int.append((i[0], int(i[1]),int(i[2]), int(i[3]), int(i[4])))
+    for i in range(0, len(text_splitted)):
+        #print(i)
+        index_ingredient = text_splitted[i].lower().find("ingrédient")
 
-l_int = sorted(l_int, key= lambda elem : elem[2])
-# for i in l_int:
-#     print(i)
+        if index_ingredient != -1:
+            #print("index: ", index_ingredient, " - content: ", text_splitted[i])
+            deb = i
+            for j in range(i, len(text_splitted)):
+                index_fin_ingredient = text_splitted[j].lower().find(".")
+                if index_fin_ingredient != -1:
+                    fin = j
+                    break
+            break
 
-tableau = []
-for i in l_int:
-    tableau.append({i[2]: i})
-# print(tableau)
-# student_tuples = [
-#     ('john', 'A', 15),
-#     ('jane', 'B', 12),
-#     ('dave', 'B', 10),
-# ]
-#sorted(student_tuples, key=lambda student: student[2])
+    ingredients = text_splitted[deb:fin+1]
+    # print(ingredients)
+    with open("p_ingredients.txt", "w", encoding="utf-8") as file:
+        for line in ingredients:
+            file.write(line + "\n")
 
-nutriments_principaux_13 ="lipides, lipides saturés,lipides trans, cholestérol, sodium,glucides, fibres, sucres, protéines, vitamine A,vitamine C, calcium, fer"
-nutriments_principaux_13 = nutriments_principaux_13.split(",")
-nutriments_facultatifs =" folate, magnésium, niacine, phosphore, potassium, riboflavine, sélénium, thiamine, vitamine B12, vitamine B6, vitamine D, vitamine E, zinc" \
-                        ",Pantothénate, Sodium"
-nutriments_facultatifs.split(",")
-def val():
+    """"
+    https://www.canada.ca/fr/sante-canada/services/comprendre-etiquetage-aliments/tableau-valeur-nutritive.html
+    Il vous donne également des renseignements sur les 13 principaux nutriments :
+    
+    les lipides
+    les lipides saturés
+    les lipides trans
+    le cholestérol
+    le sodium
+    les glucides
+    les fibres
+    les sucres
+    les protéines
+    la vitamine A
+    la vitamine C
+    le calcium
+    le fer
+    Le saviez-vous?
+    Il y a 13 principaux nutriments qui doivent figurer sur un tableau de la valeur nutritive. Cependant, voici une liste de certains des nutriments qui sont optionnels :
+    
+    le folate
+    le magnésium
+    la niacine
+    le phosphore
+    le potassium
+    la riboflavine
+    le sélénium
+    la thiamine
+    la vitamine B12
+    la vitamine B6
+    la vitamine D
+    la vitamine E
+    le zinc
+    """
+
+    l = bw_l1 + bnd_l2
+    l_int = []
+    for i in l:
+         l_int.append((i[0], int(i[1]),int(i[2]), int(i[3]), int(i[4])))
+
+    l_int = sorted(l_int, key= lambda elem : elem[2])
+    # for i in l_int:
+    #     print(i)
+
+    tableau = []
+    for i in l_int:
+        tableau.append({i[2]: i})
+    # print(tableau)
+    # student_tuples = [
+    #     ('john', 'A', 15),
+    #     ('jane', 'B', 12),
+    #     ('dave', 'B', 10),
+    # ]
+    #sorted(student_tuples, key=lambda student: student[2])
+
+    nutriments_principaux_13 ="lipides, lipides saturés,lipides trans, cholestérol, sodium,glucides, fibres, sucres, protéines, vitamine A,vitamine C, calcium, fer"
+    nutriments_principaux_13 = nutriments_principaux_13.split(",")
+    nutriments_facultatifs =" folate, magnésium, niacine, phosphore, potassium, riboflavine, sélénium, thiamine, vitamine B12, vitamine B6, vitamine D, vitamine E, zinc" \
+                            ",Pantothénate, Sodium"
+    nutriments_facultatifs.split(",")
+# def val():
     valeurs_nutritives = []
     n = 0
     deb= 0
@@ -356,11 +358,12 @@ def val():
     # for i in valeurs_nutritives:
     #     print(i[0])
 
-    return valeurs_nutritives
+    with open("p_valnutritive.txt", "w", encoding="utf-8") as file:
+        for line in valeurs_nutritives:
+            file.write(str(line[0]) + "\n")
 
-with open("p_valnutritive.txt", "w", encoding="utf-8") as file:
-    for line in val():
-        file.write(str(line[0]) + "\n")
+    interval = time.time() - start_time
+    print( 'Total time in seconds:', interval )
 
-interval = time.time() - start_time
-print( 'Total time in seconds:', interval )
+    return ingredients, valeurs_nutritives
+mainproc(img_add)
