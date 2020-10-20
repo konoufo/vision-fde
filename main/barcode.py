@@ -20,7 +20,7 @@ for barcode in barcodes:
 
     barcodeData = barcode.data.decode("utf-8")
 
-    text = "{}".format(barcodeData)
+    text = barcodeData[7:12]
     cv2.putText(image, text, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
 cv2.imshow("Image", image)
