@@ -7,7 +7,7 @@ import time
 
 #https://www.inspection.gc.ca/exigences-en-matiere-d-etiquetage-des-aliments/etiquetage/industrie/etiquetage-nutritionnel/fra/1386881685057/1386881685870
 #img_add = 'D4\\main\\static\\main\\img\\produit01.jpg'
-img_add = "C:/Users/Erwin Anoh/PycharmProjects/D4/D4/media/images/general/produit02.jpg"
+img_add = "C:\\Users\\diouf\\Documents\\Automne2020\\Design4\\GEL3021D4E1\\media\\images\\produit02.jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\ingredients\\images (29).jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\codesBarre\\téléchargement (5).jpg"
 def process(img_adress):
