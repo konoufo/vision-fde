@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'imageupload',
+    'imageupload_rest',
 ]
 
 MIDDLEWARE = [
@@ -117,14 +120,19 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
+import os
 
+STATIC_ROOT = os.path.join(BASE_DIR,'..','staticfiles')
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'main', 'static')
-# Base url to serve media files
+MEDIA_ROOT = os.path.join(BASE_DIR,'..','uploaded_media')
 MEDIA_URL = '/media/'
+#STATIC_URL = '/static/'
+#STATIC_ROOT = os.path.join(BASE_DIR, 'main', 'static')
+# Base url to serve media files
+#MEDIA_URL = '/media/'
 
 # Path where media is stored
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # LOGIN_REDIRECT_URL = 'index'
 # LOGOUT_REDIRECT_URL = 'index'
