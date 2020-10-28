@@ -7,7 +7,7 @@ import time
 
 #https://www.inspection.gc.ca/exigences-en-matiere-d-etiquetage-des-aliments/etiquetage/industrie/etiquetage-nutritionnel/fra/1386881685057/1386881685870
 #img_add = 'D4\\main\\static\\main\\img\\produit01.jpg'
-img_add = "C:\\Users\\diouf\\Documents\\Automne2020\\Design4\\GEL3021D4E1\\media\\images\\produit02.jpg"
+img_add = "../media/images/produit02.jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\ingredients\\images (29).jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\codesBarre\\téléchargement (5).jpg"
 def process(img_adress):
@@ -16,6 +16,7 @@ def process(img_adress):
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
     img = cv2.imread(img_adress)
+    # print(img)
     #pytesseract only accept rgb, so we convert bgr to rgb
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
@@ -45,8 +46,7 @@ def process(img_adress):
     # cv2.waitKey(0)
 
     return (img, boxes_splitted, boxes_stringed)
-
-
+#process(img_add)
 def find_characters(img):
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
@@ -366,4 +366,4 @@ def mainproc(img_add):
     print( 'Total time in seconds:', interval )
 
     return ingredients, valeurs_nutritives
-mainproc(img_add)
+#mainproc(img_add)
