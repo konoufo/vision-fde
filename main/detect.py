@@ -13,7 +13,8 @@ img_add = "../media/images/produit02.jpg"
 def process(img_adress):
     #https://www.murtazahassan.com/courses/opencv-projects/
     #control + left click
-    pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
 
     img = cv2.imread(img_adress)
     # print(img)
@@ -48,7 +49,8 @@ def process(img_adress):
     return (img, boxes_splitted, boxes_stringed)
 #process(img_add)
 def find_characters(img):
-    pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
 
     # img = cv2.imread(img_address)
     # pytesseract only accept rgb, so we convert bgr to rgb
@@ -74,7 +76,8 @@ def find_characters(img):
 
 
 def find_words(img):
-    pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
 
     # img = cv2.imread(img_address)
     # pytesseract only accept rgb, so we convert bgr to rgb
@@ -109,7 +112,8 @@ def find_words(img):
     return img, boxes_splitted, text_splitted, l1, l2
 
 def find_only_digits(img):
-    pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
 
     #img = cv2.imread(img_address)
     # pytesseract only accept rgb, so we convert bgr to rgb
@@ -136,7 +140,8 @@ def find_only_digits(img):
     return img, boxes_splitted
 
 def find_nutrition_digits(img):
-    pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+    pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
 
     #img = cv2.imread(img_address)
     # pytesseract only accept rgb, so we convert bgr to rgb
@@ -366,4 +371,4 @@ def mainproc(img_add):
     print( 'Total time in seconds:', interval )
 
     return ingredients, valeurs_nutritives
-#mainproc(img_add)
+# mainproc(img_add)
