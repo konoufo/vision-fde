@@ -1,8 +1,6 @@
 import cv2
 import pytesseract
-import unicodedata
-import numpy as np
-import timeit
+import os
 import time
 
 #https://www.inspection.gc.ca/exigences-en-matiere-d-etiquetage-des-aliments/etiquetage/industrie/etiquetage-nutritionnel/fra/1386881685057/1386881685870
@@ -11,9 +9,10 @@ img_add = "../media/images/produit02.jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\ingredients\\images (29).jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\codesBarre\\téléchargement (5).jpg"
 
-# pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
-pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-
+if os.environ.get("ENVIRONMENT", None) == "heroku":
+    pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
+else:
+    pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
 def process(img_adress=None, img_file=None):
     #https://www.murtazahassan.com/courses/opencv-projects/
