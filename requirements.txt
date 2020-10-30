@@ -11,4 +11,3 @@ pytz==2020.1
 pyzbar==0.1.8
 sqlparse==0.3.1
 opencv-python-headless==4.4.0.44
-zbar==0.10
