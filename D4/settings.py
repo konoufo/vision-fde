@@ -125,14 +125,13 @@ import os
 # STATIC_ROOT = os.path.join(BASE_DIR,'..','staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploaded_media')
+
+# Base url to serve media files
 MEDIA_URL = '/media/'
+
 #STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'main', 'static')
-# Base url to serve media files
-#MEDIA_URL = '/media/'
 
-# Path where media is stored
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # LOGIN_REDIRECT_URL = 'index'
 # LOGOUT_REDIRECT_URL = 'index'
