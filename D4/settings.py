@@ -25,7 +25,7 @@ SECRET_KEY = 'p7nmwrln(iwpw$5weq6195=o2(#(&=9nib!%5a!8loih4r&69e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["alivisiond4.herokuapp.com"]
+ALLOWED_HOSTS = ["alivisiond4.herokuapp.com", "*"]
 
 
 # Application definition
