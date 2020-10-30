@@ -26,7 +26,7 @@ def image_upload_view(request):
             im_path = os.path.join(settings.MEDIA_ROOT,"images", im_name)
 
             im_name = "proc_" + im_name
-            img_proc_pathtosave = os.path.join(settings.STATIC_ROOT_MAIN,"main", "img", im_name)
+            img_proc_pathtosave = os.path.join(settings.STATIC_ROOT,"main", "img", im_name)
 
             if var == "barcode":
                 img_proc, img_proc_datas, text, fichier_json = barcode.get_string_barcode(im_path)
@@ -42,7 +42,7 @@ def image_upload_view(request):
                 cv2.imwrite(img_proc_pathtosave, img_proc)
 
             img_proc_datas_name = "data_" + im_name + ".txt"
-            img_proc_datas_pathtosave = os.path.join(settings.STATIC_ROOT_MAIN,"main", "datas", img_proc_datas_name)
+            img_proc_datas_pathtosave = os.path.join(settings.STATIC_ROOT,"main", "datas", img_proc_datas_name)
 
             with open(img_proc_datas_pathtosave, "w", encoding="utf-8") as file:
                 for line in img_proc_datas:
