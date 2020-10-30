@@ -1,6 +1,7 @@
 from pyzbar import pyzbar
 import argparse
 import cv2
+import requests
 
 #
 # ap = argparse.ArgumentParser()
@@ -14,6 +15,7 @@ path = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\produit01
 def get_string_barcode(img_addreess):
     image = cv2.imread(img_addreess)
     barcodes = pyzbar.decode(image)
+    barcodeData = ""
 
     for barcode in barcodes:
         (x, y, w, h) = barcode.rect
@@ -27,7 +29,20 @@ def get_string_barcode(img_addreess):
         # cv2.imshow("Image", image)
         # cv2.waitKey(0)
 
-    return image, barcodeData, text
+    url = "https://world.openfoodfacts.org/api/v0/product/[" + barcodeData + "].json"
+    try:
+        response = requests.get(url)
+    except:
+        print("Please enter a valide code")
+
+    fichier = response.content
+
+    if len(barcodeData) < 2 or text == ""  or len(text)< 2:
+        barcodeData = "0000000000"
+        text = "not found"
+        fichier = "not found"
+
+    return image, barcodeData, text, fichier
 
 # a, b, c = get_string_barcode(path)
 #
