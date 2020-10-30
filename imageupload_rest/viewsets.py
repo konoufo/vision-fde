@@ -27,7 +27,7 @@ class UploadImageViewset(viewsets.ModelViewSet):
         image = self.get_object()
         if image is not None:
             code_barre = barcode.get_string_barcode(os.path.join(settings.MEDIA_ROOT, image.image.name))
-            return Response({'statut': 'success', 'code_barre': code_barre[2]})
+            return Response({'statut': 'success', 'code_barre': code_barre[4]})
         else:
             return Response({'statut': 'echec'},
                             status=status.HTTP_400_BAD_REQUEST)
