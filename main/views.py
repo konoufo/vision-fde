@@ -1,4 +1,5 @@
 import os
+from io import BytesIO
 
 from django.shortcuts import render
 from . import detect
@@ -6,7 +7,9 @@ from . import detect
 from django.http import HttpResponse
 
 from .forms import ImageForm
-import cv2
+import cv2, cloudinary
+import cloudinary.uploader
+import numpy as np
 from . import detect, barcode
 from django.conf import settings
 
@@ -14,44 +17,57 @@ from django.conf import settings
 def image_upload_view(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
+        form = ImageForm(request.POST)
+
+        # ******************************
+        image = request.FILES.get("image")
+        image_stream = BytesIO(image.read())
+
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.image = None
+
             # Get the current instance object to display in the template
             var = request.POST.get("vision")
            # print("XXX Varr:", var)
 
-            img_obj = form.instance
-            im_name = form.cleaned_data['image'].name
-            im_path = os.path.join(settings.MEDIA_ROOT,"images", im_name)
+            result = cloudinary.uploader.upload(image_stream)
+            obj.image_id = result["public_id"]
+            obj.save()
 
-            im_name = "proc_" + im_name
-            img_proc_pathtosave = os.path.join(settings.STATIC_ROOT,"main", "img", im_name)
+            #******************************
+            # img_proc_pathtosave = os.path.join(settings.STATIC_ROOT,"main", "img", im_name)
+            image_stream.seek(0)
+            file_bytes = np.asarray(bytearray(image_stream.read()), dtype=np.uint8)
+            img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
 
             if var == "barcode":
-                img_proc, img_proc_datas, text, fichier_json = barcode.get_string_barcode(im_path)
-                cv2.imwrite(img_proc_pathtosave, img_proc)
-                #print(fichier_json)
+                img_proc, img_proc_datas, text, fichier_json = barcode.get_string_barcode(img_file=img)
             else:
-                #####call the vision algo and extract image, image processed, image name and datas
-                img_proc = detect.process(im_path)[0]
-                img_proc_datas = detect.process(im_path)[1]
-                #print("XXXXXX path to save: ", img_proc_pathtosave)
+                img_proc, img_proc_datas, box = detect.process(img_file=img)
 
-                #save the image processed to statics et the datas
-                cv2.imwrite(img_proc_pathtosave, img_proc)
+            # ******************************
+            # cv2.imwrite(img_proc_pathtosave, img_proc)
+            img_proc = cv2.imencode(".png", img_proc)[1].tobytes()
+            result = cloudinary.uploader.upload(img_proc, public_id=obj.image_id + "proc", overwrite=True)
+            image_proc_id = result["public_id"]
 
-            img_proc_datas_name = "data_" + im_name + ".txt"
-            img_proc_datas_pathtosave = os.path.join(settings.STATIC_ROOT,"main", "datas", img_proc_datas_name)
+            #save the image processed to statics et the datas
+            # ******************************
+            try:
+                img_proc_datas_name = "data_" + image.name + ".txt"
+                img_proc_datas_pathtosave = os.path.join(settings.STATIC_ROOT,"main", "datas", img_proc_datas_name)
 
-            with open(img_proc_datas_pathtosave, "w", encoding="utf-8") as file:
-                for line in img_proc_datas:
-                    file.write(line + "\n")
-
+                # ******************************
+                with open(img_proc_datas_pathtosave, "w", encoding="utf-8") as file:
+                    for line in img_proc_datas:
+                        file.write(line + "\n")
+            except OSError:
+                pass
 
             return render(request, 'main/index.html', {'form': form,
-                                                       'img_obj': img_obj,
-                                                       'img_proc': img_proc_pathtosave,
+                                                       'img_obj':{"title": obj.title, "url": cloudinary.CloudinaryImage(obj.image_id).build_url()},
+                                                       'img_proc': cloudinary.CloudinaryImage(image_proc_id).build_url(),
                                                        'img_proc_datas': img_proc_datas,
                                                        })
     else:

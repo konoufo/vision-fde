@@ -12,8 +12,8 @@ import requests
 
 path = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\produit01.jpg"
 
-def get_string_barcode(img_addreess):
-    image = cv2.imread(img_addreess)
+def get_string_barcode(img_addreess=None, img_file=None):
+    image = img_file if img_file is not None else cv2.imread(img_addreess)
     barcodes = pyzbar.decode(image)
     barcodeData = ""
 
