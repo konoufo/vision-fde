@@ -44,8 +44,11 @@ def image_upload_view(request):
             if var == "barcode":
                 img_proc, img_proc_datas, text, fichier_json = barcode.get_string_barcode(img_file=img)
             else:
-                img_proc, img_proc_datas, box = detect.process(img_file=img)
-
+                # img_proc, img_proc_datas, box = detect.process(img_file=img)
+                #I get and write explicitely all arguments so its better to understand; but I only use just some of them
+                img_proc_datas1, img_proc_datas2, img, img1, img2, img3, img4 = detect.mainproc(img_file=img)
+                img_proc_datas = img_proc_datas1
+                img_proc = img4
             # ******************************
             # cv2.imwrite(img_proc_pathtosave, img_proc)
             img_proc = cv2.imencode(".png", img_proc)[1].tobytes()
