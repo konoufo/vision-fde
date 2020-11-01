@@ -8,15 +8,16 @@ import time
 img_add = "../media/images/produit02.jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\ingredients\\images (29).jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\codesBarre\\téléchargement (5).jpg"
+# https://www.murtazahassan.com/courses/opencv-projects/
+# control + left click
 
 if os.environ.get("ENVIRONMENT", None) == "heroku":
     pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
 else:
+    #le chemin de l'installation de tesseract
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
 def process(img_adress=None, img_file=None):
-    #https://www.murtazahassan.com/courses/opencv-projects/
-    #control + left click
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
     # print(img)
@@ -45,16 +46,14 @@ def process(img_adress=None, img_file=None):
         #ecrire le caracteres dessus
         cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 255, 50), 2)
 
-    # cv2.imshow('result', img)
-    # cv2.waitKey(0)
+    cv2.imshow('result', img)
+    cv2.waitKey(0)
 
     return (img, boxes_splitted, boxes_stringed)
-#process(img_add)
-def find_characters(img):
-    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-    # pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
+# process(img_add)
+def find_characters(img_adress=None, img_file=None):
 
-    # img = cv2.imread(img_address)
+    img = img_file if img_file is not None else cv2.imread(img_adress)
     # pytesseract only accept rgb, so we convert bgr to rgb
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     #############################################
@@ -70,18 +69,13 @@ def find_characters(img):
         x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
         cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 2)
         # cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 255), 2)
-    #
-    # cv2.imshow('characters', img)
-    # cv2.waitKey(0)
 
     return img, boxes_splitted
 
 
-def find_words(img):
-    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-    # pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
+def find_words(img_adress=None, img_file=None):
 
-    # img = cv2.imread(img_address)
+    img = img_file if img_file is not None else cv2.imread(img_adress)
     # pytesseract only accept rgb, so we convert bgr to rgb
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     ##############################################
@@ -108,16 +102,12 @@ def find_words(img):
                     cv2.rectangle(img, (x,y), (x+w, y+h), (255, 50, 50), 2)
                     text_splitted.append(b[11])
 
-    # cv2.imshow('words', img)
-    # cv2.waitKey(0)
 
     return img, boxes_splitted, text_splitted, l1, l2
 
-def find_only_digits(img):
-    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-    # pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
+def find_only_digits(img_adress=None, img_file=None):
 
-    #img = cv2.imread(img_address)
+    img = img_file if img_file is not None else cv2.imread(img_adress)
     # pytesseract only accept rgb, so we convert bgr to rgb
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     #############################################
@@ -136,16 +126,11 @@ def find_only_digits(img):
         cv2.rectangle(img, (x,hImg- y), (w,hImg- h), (50, 255, 255), 2)
         cv2.putText(img,b[0],(x,hImg- y+25),cv2.FONT_HERSHEY_SIMPLEX,1,(50,50,255),2)
 
-    # cv2.imshow('only digits', img)
-    # cv2.waitKey(0)
-
     return img, boxes_splitted
 
-def find_nutrition_digits(img):
-    # pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-    # pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
+def find_nutrition_digits(img_adress=None, img_file=None):
 
-    #img = cv2.imread(img_address)
+    img = img_file if img_file is not None else cv2.imread(img_adress)
     # pytesseract only accept rgb, so we convert bgr to rgb
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     #############################################
@@ -167,15 +152,12 @@ def find_nutrition_digits(img):
         x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
         cv2.rectangle(img, (x,hImg- y), (w,hImg- h), (50, 50, 255), 2)
         cv2.putText(img,b[0],(x,hImg- y+25),cv2.FONT_HERSHEY_SIMPLEX,1,(50,50,255),2)
-    #
-    # cv2.imshow('nutrition digits', img)
-    # cv2.waitKey(0)
 
     return img, boxes_splitted, l1, l2
 
 ###################################################################################
-def detect_contours(img_address):
-    img = cv2.imread(img_address)
+def detect_contours(img_adress=None, img_file=None):
+    img = img_file if img_file is not None else cv2.imread(img_adress)
     # conversion en niveaux de gris(127,255,0)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     ret,thresh = cv2.threshold(gray,250,255,cv2.THRESH_BINARY_INV)
@@ -212,37 +194,38 @@ def detect_contours(img_address):
 
 start_time = time.time()
 
-def mainproc(img_add):
-    img, sub_fig = detect_contours(img_add)
+def mainproc(img_adress=None, img_file=None):
+    img, sub_fig = detect_contours(img_adress=img_add, img_file=img_file)
     # cv2.imshow('contours', img)
     # cv2.imwrite('p_contours.jpg', img)
     # cv2.waitKey(0)
     #
     #process(img_add)
-    img1, bc_splitted = find_characters(img)
+    img1, bc_splitted = find_characters(img_file=img)
     # cv2.imshow('only characters', img1)
     # cv2.imwrite('p_characters.jpg', img1)
     # cv2.waitKey(0)
 
-    img2, bw_splitted, text_splitted, bw_l1, bw_l2 = find_words(img)
+    img2, bw_splitted, text_splitted, bw_l1, bw_l2 = find_words(img_file=img)
     # cv2.imshow('words', img2)
     # cv2.imwrite('p_mots.jpg', img2)
     # cv2.waitKey(0)
 
+    # #***************************************traitement à faire
+    # cv2.drawContours(img, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
+    # cv2.drawContours(img, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
+    # cv2.drawContours(img2, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
+    # cv2.drawContours(img2, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
 
-    cv2.drawContours(img, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
-    cv2.drawContours(img, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
-    cv2.drawContours(img2, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
-    cv2.drawContours(img2, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
     # cv2.imshow('words+contours', img2)
     # cv2.imwrite('p_mots_contours_tableaux.jpg', img2)
     # cv2.waitKey(0)
 
-    img3, bod_splitted = find_only_digits(img)
+    img3, bod_splitted = find_only_digits(img_file=img2)
     # cv2.imshow('only digits', img3)
     # cv2.waitKey(0)
 
-    img4, bnd_splitted, bnd_l1, bnd_l2 = find_nutrition_digits(img)
+    img4, bnd_splitted, bnd_l1, bnd_l2 = find_nutrition_digits(img_file=img3)
     # cv2.imshow('nutrition digits', img4)
     # cv2.imwrite('p_nutritiondigit.jpg', img4)
     # cv2.waitKey(0)
@@ -365,12 +348,17 @@ def mainproc(img_add):
     # for i in valeurs_nutritives:
     #     print(i[0])
 
-    with open("p_valnutritive.txt", "w", encoding="utf-8") as file:
-        for line in valeurs_nutritives:
-            file.write(str(line[0]) + "\n")
+    #ingredients et valeur nutritives sous forme de dictionnaire
+    #ecrire aussi dans la bd les fichiers
 
-    interval = time.time() - start_time
-    print( 'Total time in seconds:', interval )
+    # with open("p_valnutritive.txt", "w", encoding="utf-8") as file:
+    #     for line in valeurs_nutritives:
+    #         file.write(str(line[0]) + "\n")
+    #
+    # interval = time.time() - start_time
+    # print('Total time in seconds:', interval)
+    # # 0, 1, 2_im0, 3_im1, 4_im2, 5_im3, 6_im4
 
-    return ingredients, valeurs_nutritives
-# mainproc(img_add)
+    return ingredients, valeurs_nutritives, img, img1, img2, img3, img4
+
+#mainproc(img_add)
