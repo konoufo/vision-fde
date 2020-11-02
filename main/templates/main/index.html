@@ -1,41 +1,96 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
-
-      {% load static %}
-
-
+    <title>Ali Vision D4</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+          {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
 </head>
 <body>
 
+    <!-- Header -->
+<header class="w3-container w3-theme w3-padding" id="myHeader">
+  <i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i>
+  <div class="w3-center">
+<!--  <h4>BEAUTIFUL RESPONSIVE WEB SITES</h4>-->
+  <h1 class="w3-xxxlarge w3-animate-bottom">Ali Vision Artificielle pour aliments</h1>
+    <div class="w3-padding-32">
+        <a href="/api"
+           class="w3-btn w3-xlarge w3-dark-grey w3-hover-light-grey"
+           style="font-weight:900;"> Lien vers l'API </a>
+    </div>
+  </div>
+</header>
+
     {% if img_obj %}
-    <div>
-        <h3>Succesfully uploaded : {{img_obj.title}}</h3>
-        <img src="{{ img_obj.url }}" alt="connect" style="max-height:500px;max-width: 500px">
-        <img src="{{ img_proc }}" alt="connect" style="max-height:500px; max-width: 500px">
+    <div class="container-informations">
+<!--    w3-row-padding w3-center w3-margin-top -->
+        <div class="images-wrapper">
+            <div class="images-wrapper">
+                <div class="image-uploaded-wrapper">
+                    <h1 class="title-image-uploaded">Image bien téléversée : {{img_obj.title}}</h1>
+                    <img src="{{ img_obj.url }}" alt="connect">
+                </div>
+                <div class="image-processed-wrapper">
+                    <h1 class="title-image-processed">Image traitée :</h1>
+                    <img src="{{ img_proc }}" alt="connect" >
+                </div>
+            </div>
+        </div>
+        <div class="informations-wrapper">
+            <div>
+                <h1 class="title-informations-1">Informations déchiffrées :</h1><br>
 
+                {% if radio == "barcode" %}
+                <div class="ingredients-text">
+                    <p style="font-weight: bold"> CODE BARRE: </p>
+                    <p class="ingredients-text"> {{barcode_str}} </p>
+                    <br>
+                    <p style="font-weight: bold;"> INFORMATIONS du JSON:</p>
+                    <p> {{barcode_datas}} ...</p>
+                    <p style="color: #007bff">Limité à 500 caractères; télécharger pour voir le contenu entier.
+                    </p>
+                </div>
+                {% else %}
+                <div class="ingredients-text">
+                    <p class="ingredients-text">
+                    <p style="font-weight: bold;"> INGRÉDIENTS: </p>
+                    <p> {{img_proc_ingredients}} </p>
+                        <br>
+                    <p style="font-weight: bold">VALEURS NUTRITIVES:</p>
+                    <p class="valeurs_nutritives-text">
+                    {{img_proc_valeurs_nutritives}}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
+
     {% endif %}
+    <div class="w3-padding-32 w3-center ma-box-radio">
+        <div class="w3-btn w3-xlarge w3-dark-grey w3-hover-light-grey"
+               style="font-weight:900; position: center">
 
+               <form method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
 
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-        <div>
-        <input type="radio" id="barcode" value="barcode" name="vision">
-        <label for ="barcode"> Reconnaissance de code barre </label>
-        <br>
-        <input type="radio" id="vision" value="vision" name="vision">
-        <label for ="vision"> Reconnaissance par vision </label>
-        <br>
+                    <input type="radio" id="barcode" value="barcode" name="vision">
+                    <label for ="barcode"> Reconnaissance de code barre </label>
+                    <br>
+                    <input type="radio" id="vision" value="vision" name="vision">
+                    <label for ="vision"> Reconnaissance par vision </label>
+                    <br>
+                    {{ form.as_p }}
+                  <button type="submit"> Soumettre</button>
+                </form>
+        </div>
     </div>
-        {{ form.as_p }}
-      <button type="submit">Upload</button>
-    </form>
-
-    <a href="/api"> Lien vers l'API </a>
-
-
 </body>
 </html>
