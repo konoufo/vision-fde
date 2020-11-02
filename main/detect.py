@@ -345,8 +345,9 @@ def mainproc(img_adress=None, img_file=None):
         n+=1
 
     valeurs_nutritives = l_int[deb:fin]
-    # for i in valeurs_nutritives:
-    #     print(i[0])
+    val = []
+    for i in valeurs_nutritives:
+        val.append(i[0])
 
     #ingredients et valeur nutritives sous forme de dictionnaire
     #ecrire aussi dans la bd les fichiers
@@ -359,6 +360,6 @@ def mainproc(img_adress=None, img_file=None):
     # print('Total time in seconds:', interval)
     # # 0, 1, 2_im0, 3_im1, 4_im2, 5_im3, 6_im4
 
-    return ingredients, valeurs_nutritives, img, img1, img2, img3, img4
+    return ingredients, val, img, img1, img2, img3, img4
 
 #mainproc(img_add)
