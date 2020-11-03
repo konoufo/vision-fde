@@ -1,21 +1,171 @@
 import cv2
 import pytesseract
+from pytesseract import Output
 import os
 import time
 
 #https://www.inspection.gc.ca/exigences-en-matiere-d-etiquetage-des-aliments/etiquetage/industrie/etiquetage-nutritionnel/fra/1386881685057/1386881685870
 #img_add = 'D4\\main\\static\\main\\img\\produit01.jpg'
-img_add = "../media/images/produit02.jpg"
+
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\ingredients\\images (29).jpg"
 #img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\codesBarre\\téléchargement (5).jpg"
 # https://www.murtazahassan.com/courses/opencv-projects/
 # control + left click
+""""
+    https://www.canada.ca/fr/sante-canada/services/comprendre-etiquetage-aliments/tableau-valeur-nutritive.html
+    Il vous donne également des renseignements sur les 13 principaux nutriments :
+
+    les lipides
+    les lipides saturés
+    les lipides trans
+    le cholestérol
+    le sodium
+    les glucides
+    les fibres
+    les sucres
+    les protéines
+    la vitamine A
+    la vitamine C
+    le calcium
+    le fer
+    Le saviez-vous?
+    Il y a 13 principaux nutriments qui doivent figurer sur un tableau de la valeur nutritive. Cependant, voici une liste de certains des nutriments qui sont optionnels :
+
+    le folate
+    le magnésium
+    la niacine
+    le phosphore
+    le potassium
+    la riboflavine
+    le sélénium
+    la thiamine
+    la vitamine B12
+    la vitamine B6
+    la vitamine D
+    la vitamine E
+    le zinc
+    """
+nutriments_principaux_13 = "lipides, lipides saturés,lipides trans, cholestérol, sodium, glucides, fibres, sucres, protéines, vitamine A,vitamine C, calcium, Fer"
+nutriments_principaux_13 = nutriments_principaux_13.split(",")
+nutriments_speciaux = "saturés, trans, polyinsaturés, oméga, monoinsaturés, fibres, sucres, B6, B-6, B12, B-12, vitamine"
+nutriments_speciaux = nutriments_speciaux.split(",")
+nutriments_facultatifs = "folate, magnésium, niacine, phosphore, potassium, riboflavine, sélénium, thiamine, vitamine B12, vitamine B6, vitamine D, vitamine E, zinc" \
+                         ",Pantothénate"
+nutriments_facultatifs = nutriments_facultatifs.split(",")
+unites = "g,mh,%,yg"
+all = nutriments_principaux_13 + nutriments_facultatifs + nutriments_speciaux
+#print(all)
+img_add = "../media/images/produit02.jpg"
+
+'''
+    CONFIGURATION DE LA COMMAND LINE DE PYTESSERACT
+    VERIFIE SI ON UTILISE HEROKU OU PAS
+
+'''
 
 if os.environ.get("ENVIRONMENT", None) == "heroku":
     pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
 else:
     #le chemin de l'installation de tesseract
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+
+def detect_VN_ING(img_adress=None, img_file=None):
+
+    img = img_file if img_file is not None else cv2.imread(img_adress)
+    # pytesseract only accept rgb, so we convert bgr to rgb
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    ##############################################
+    ##### Detecting Words  ######
+    ##############################################
+    #[   0          1           2           3           4          5         6       7       8        9        10       11 ]
+    #['level', 'page_num', 'block_num', 'par_num', 'line_num', 'word_num', 'left', 'top', 'width', 'height', 'conf', 'text']
+    boxes = pytesseract.image_to_data(img)
+    # boxes_dict = pytesseract.image_to_data(img, output_type=Output.DICT)
+    Text = pytesseract.image_to_string(img)
+    #print(boxes) # to see
+
+    #######################################################################################################
+    hImg, wImg, _ = img.shape
+    conf = r'--oem 3 --psm 6 outputbase digits'
+    boxes = pytesseract.image_to_boxes(img, config=conf)
+    boxes_splitted = boxes.splitlines()
+    l1 = []
+    l2 = []
+    for b in boxes_splitted:
+        b = b.split(' ')
+        l1.append(tuple(b))
+        l2.append(b[1:])
+        # print(b)
+        x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+        cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 2)
+        cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 255), 2)
+    #######################################################################################################
+    # boxes_splitted = boxes.splitlines()
+    # text_splitted = []
+    # l1 = []
+    # l2 = []
+    # for a,b in enumerate(boxes_splitted):
+    #         #print(b)
+    #         if a!=0:
+    #             b = b.split()
+    #             if len(b)==12:
+    #                 x,y,w,h = int(b[6]),int(b[7]),int(b[8]),int(b[9])
+    #                 l1.append((b[11], x, y, w, h))
+    #                 l2.append([x, y, w, h])
+    #                 # cv2.putText(img,b[11],(x,y-5),cv2.FONT_HERSHEY_SIMPLEX,1,(255,50, 50),2)
+    #                 cv2.rectangle(img, (x,y), (x+w, y+h), (255, 50, 50), 2)
+    #                 text_splitted.append(b[11])
+
+    ###################################################################################################
+    n =0
+    Text_splitted = Text.split('\n')
+    for i in Text_splitted:
+        # print(n,": " , i)
+        n = n + 1
+
+    # with open("p_valnutritive.txt", "w", encoding="utf-8") as file:
+    #     for line in valeurs_nutritives:
+    #         file.write(str(line[0]) + "\n")
+
+    valeurs_nutritives = {}
+    for j in all:
+        valeurs_nutritives[j] = []
+        for i in Text_splitted:
+            if (i.replace(" ","")).lower().find(j.replace(" ","").lower()) != -1:
+                # print(j, ": ", i)
+                valeurs_nutritives[j].append(i)
+
+    # print("-------------------------------------")
+    for k in list(valeurs_nutritives):
+        if valeurs_nutritives[k] == []:
+            valeurs_nutritives.pop(k)
+    ingredients = []
+    l = 0
+    for m in Text_splitted:
+       l = l+1
+       if m.lower().replace(" ", "").find("ingrédients".lower()) != -1:
+           break
+
+    for i in range(l, len(Text_splitted)-1):
+        ingredients.append(Text_splitted[i])
+        if Text_splitted[i] == '':
+            break
+
+    #print("ingredients: ", ingredients)
+
+
+    return img, Text, valeurs_nutritives, {"Ingrédients":ingredients}
+#
+# img, Text, valeurs_nutritives, ingredients = detect_VN_ING(img_add)
+# cv2.imshow("img", img)
+# cv2.waitKey(0)
+
+#
+# for k, v in valeurs_nutritives.items():
+#         if v!= []:
+#             print(k, ": ", v)
+# print(ingredients["Ingrédients"])
+#
 
 def process(img_adress=None, img_file=None):
 
@@ -73,38 +223,6 @@ def find_characters(img_adress=None, img_file=None):
     return img, boxes_splitted
 
 
-def find_words(img_adress=None, img_file=None):
-
-    img = img_file if img_file is not None else cv2.imread(img_adress)
-    # pytesseract only accept rgb, so we convert bgr to rgb
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    ##############################################
-    ##### Detecting Words  ######
-    ##############################################
-    #[   0          1           2           3           4          5         6       7       8        9        10       11 ]
-    #['level', 'page_num', 'block_num', 'par_num', 'line_num', 'word_num', 'left', 'top', 'width', 'height', 'conf', 'text']
-    boxes = pytesseract.image_to_data(img)
-    #print(boxes) # to see
-
-    boxes_splitted = boxes.splitlines()
-    text_splitted = []
-    l1 = []
-    l2 = []
-    for a,b in enumerate(boxes_splitted):
-            #print(b)
-            if a!=0:
-                b = b.split()
-                if len(b)==12:
-                    x,y,w,h = int(b[6]),int(b[7]),int(b[8]),int(b[9])
-                    l1.append((b[11], x, y, w, h))
-                    l2.append([x, y, w, h])
-                    # cv2.putText(img,b[11],(x,y-5),cv2.FONT_HERSHEY_SIMPLEX,1,(255,50, 50),2)
-                    cv2.rectangle(img, (x,y), (x+w, y+h), (255, 50, 50), 2)
-                    text_splitted.append(b[11])
-
-
-    return img, boxes_splitted, text_splitted, l1, l2
-
 def find_only_digits(img_adress=None, img_file=None):
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
@@ -133,15 +251,10 @@ def find_nutrition_digits(img_adress=None, img_file=None):
     img = img_file if img_file is not None else cv2.imread(img_adress)
     # pytesseract only accept rgb, so we convert bgr to rgb
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    #############################################
-    #### Detecting ONLY Digits  ######
-    #############################################
     hImg, wImg,_ = img.shape
     conf = r'--oem 3 --psm 6 outputbase digits'
     boxes = pytesseract.image_to_boxes(img, config=conf)
     boxes_splitted = boxes.splitlines()
-    # nutri_boxes = pytesseract.image_to_data(img).splitlines()
-    # for b, c in zip(boxes_splitted, nutri_boxes):
     l1 = []
     l2 = []
     for b in boxes_splitted:
@@ -191,175 +304,10 @@ def detect_contours(img_adress=None, img_file=None):
             n = n + 1
     return img, sub_figures
 
-
-start_time = time.time()
-
 def mainproc(img_adress=None, img_file=None):
     img, sub_fig = detect_contours(img_adress=img_add, img_file=img_file)
-    # cv2.imshow('contours', img)
-    # cv2.imwrite('p_contours.jpg', img)
-    # cv2.waitKey(0)
-    #
-    #process(img_add)
     img1, bc_splitted = find_characters(img_file=img)
-    # cv2.imshow('only characters', img1)
-    # cv2.imwrite('p_characters.jpg', img1)
-    # cv2.waitKey(0)
+    img2, Text, valeurs_nutritives, ingredients = detect_VN_ING(img_file=img)
+    img4, bnd_splitted, bnd_l1, bnd_l2 = find_nutrition_digits(img_file=img2)
 
-    img2, bw_splitted, text_splitted, bw_l1, bw_l2 = find_words(img_file=img)
-    # cv2.imshow('words', img2)
-    # cv2.imwrite('p_mots.jpg', img2)
-    # cv2.waitKey(0)
-
-    # #***************************************traitement à faire
-    # cv2.drawContours(img, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
-    # cv2.drawContours(img, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
-    # cv2.drawContours(img2, [sub_fig["fig3"][0]], -1, (0,255,0), 2)
-    # cv2.drawContours(img2, [sub_fig["fig1"][0]], -1, (0,255,0), 2)
-
-    # cv2.imshow('words+contours', img2)
-    # cv2.imwrite('p_mots_contours_tableaux.jpg', img2)
-    # cv2.waitKey(0)
-
-    img3, bod_splitted = find_only_digits(img_file=img2)
-    # cv2.imshow('only digits', img3)
-    # cv2.waitKey(0)
-
-    img4, bnd_splitted, bnd_l1, bnd_l2 = find_nutrition_digits(img_file=img3)
-    # cv2.imshow('nutrition digits', img4)
-    # cv2.imwrite('p_nutritiondigit.jpg', img4)
-    # cv2.waitKey(0)
-    #########
-
-    # for i, val in enumerate(text_splitted):
-    #     #print(i)
-    #     index_ingredient = val.lower().find("ingrédient")
-    #     index_fin_ingredient = val.lower().find(".")
-    #     if index_ingredient != -1:
-    #         print("index: ", index_ingredient, " - content: ", val)
-    #         deb = i
-    #     if index_fin_ingredient != -1 :
-    #         fin = i
-    #         break
-
-    # uncomment
-
-
-    deb =0
-    fin =0
-
-    for i in range(0, len(text_splitted)):
-        #print(i)
-        index_ingredient = text_splitted[i].lower().find("ingrédient")
-
-        if index_ingredient != -1:
-            #print("index: ", index_ingredient, " - content: ", text_splitted[i])
-            deb = i
-            for j in range(i, len(text_splitted)):
-                index_fin_ingredient = text_splitted[j].lower().find(".")
-                if index_fin_ingredient != -1:
-                    fin = j
-                    break
-            break
-
-    ingredients = text_splitted[deb:fin+1]
-    # print(ingredients)
-    with open("p_ingredients.txt", "w", encoding="utf-8") as file:
-        for line in ingredients:
-            file.write(line + "\n")
-
-    """"
-    https://www.canada.ca/fr/sante-canada/services/comprendre-etiquetage-aliments/tableau-valeur-nutritive.html
-    Il vous donne également des renseignements sur les 13 principaux nutriments :
-    
-    les lipides
-    les lipides saturés
-    les lipides trans
-    le cholestérol
-    le sodium
-    les glucides
-    les fibres
-    les sucres
-    les protéines
-    la vitamine A
-    la vitamine C
-    le calcium
-    le fer
-    Le saviez-vous?
-    Il y a 13 principaux nutriments qui doivent figurer sur un tableau de la valeur nutritive. Cependant, voici une liste de certains des nutriments qui sont optionnels :
-    
-    le folate
-    le magnésium
-    la niacine
-    le phosphore
-    le potassium
-    la riboflavine
-    le sélénium
-    la thiamine
-    la vitamine B12
-    la vitamine B6
-    la vitamine D
-    la vitamine E
-    le zinc
-    """
-
-    l = bw_l1 + bnd_l2
-    l_int = []
-    for i in l:
-         l_int.append((i[0], int(i[1]),int(i[2]), int(i[3]), int(i[4])))
-
-    l_int = sorted(l_int, key= lambda elem : elem[2])
-    # for i in l_int:
-    #     print(i)
-
-    tableau = []
-    for i in l_int:
-        tableau.append({i[2]: i})
-    # print(tableau)
-    # student_tuples = [
-    #     ('john', 'A', 15),
-    #     ('jane', 'B', 12),
-    #     ('dave', 'B', 10),
-    # ]
-    #sorted(student_tuples, key=lambda student: student[2])
-
-    nutriments_principaux_13 ="lipides, lipides saturés,lipides trans, cholestérol, sodium,glucides, fibres, sucres, protéines, vitamine A,vitamine C, calcium, fer"
-    nutriments_principaux_13 = nutriments_principaux_13.split(",")
-    nutriments_facultatifs =" folate, magnésium, niacine, phosphore, potassium, riboflavine, sélénium, thiamine, vitamine B12, vitamine B6, vitamine D, vitamine E, zinc" \
-                            ",Pantothénate, Sodium"
-    nutriments_facultatifs.split(",")
-# def val():
-    valeurs_nutritives = []
-    n = 0
-    deb= 0
-    fin = 0
-    for i in l_int:
-        index_ingredient = i[0].lower().find("valeur")
-        index_fin_ingredient = i[0].lower().find(".")
-        if index_ingredient != -1:
-            deb = n
-            #print("ok deb", deb)
-        if index_fin_ingredient != -1:
-            fin = n
-            #print("ok fin", fin)
-        n+=1
-
-    valeurs_nutritives = l_int[deb:fin]
-    val = []
-    for i in valeurs_nutritives:
-        val.append(i[0])
-
-    #ingredients et valeur nutritives sous forme de dictionnaire
-    #ecrire aussi dans la bd les fichiers
-
-    # with open("p_valnutritive.txt", "w", encoding="utf-8") as file:
-    #     for line in valeurs_nutritives:
-    #         file.write(str(line[0]) + "\n")
-    #
-    # interval = time.time() - start_time
-    # print('Total time in seconds:', interval)
-    # # 0, 1, 2_im0, 3_im1, 4_im2, 5_im3, 6_im4
-
-    return ingredients, val, img, img1, img2, img3, img4
-
-#mainproc(img_add)
+    return ingredients, img, img1, img2, img4

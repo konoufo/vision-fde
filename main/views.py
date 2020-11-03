@@ -56,9 +56,8 @@ def image_upload_view(request):
             else:
                 # img_proc, img_proc_datas, box = detect.process(img_file=img)
                 #I get and write explicitely all arguments so its better to understand; but I only use just some of them
-                ingredients, valeurs_nutritives, img, img1, img2, img3, img4 = detect.mainproc(img_file=img)
-                img_proc_datas = ingredients
-                img_proc = img4
+                #ingredients, valeurs_nutritives, img, img1, img2, img3, img4 = detect.mainproc(img_file=img)
+                img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img)
             # ******************************
             # cv2.imwrite(img_proc_pathtosave, img_proc)
             img_proc = cv2.imencode(".png", img_proc)[1].tobytes()
