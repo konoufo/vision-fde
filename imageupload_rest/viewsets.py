@@ -22,8 +22,9 @@ class UploadImageViewset(viewsets.ModelViewSet):
         image = self.get_object()
         if image is not None:
             img = self.validate_image(image)
-            val = detect.mainproc(img_file=img)
-            response = {'statut': 'success', 'ingredients': val[0],'valeurs nutritives': val[1]}
+            # val = detect.mainproc(img_file=img)
+            img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img)
+            response = {'statut': 'success', 'Ingrédients': ingredients,'Valeurs nutritives': valeurs_nutritives}
             return Response(response)
         else:
             return Response({'statut': 'echec'},
