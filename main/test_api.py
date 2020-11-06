@@ -1,7 +1,7 @@
 import requests
 import json
 
-file_path = "../media/images/produit02.jpg"
+file_path = "../media/images/produit01.jpg"
 #url = "https://{domain_prefix}.vendhq.com/api/2.0/products/{product_id}/actions/image_upload"
 
 def requete_post(file_path=None, url=None):
@@ -34,3 +34,14 @@ url_rb = "https://alivisiond4.herokuapp.com/api/images/"+str(image_pk)+"/reconBa
 r_post_reconBarcode = requete_post(url=url_rb)
 #utiliser json.loads(r_post_reconBarcode) pour convertir la reponse en dictionnaire json
 print(r_post_reconBarcode)
+#print(type(r_post_reconBarcode))
+
+j_son = r_post_reconBarcode.replace('\\"', '"')
+print(j_son)
+
+with open(file="test_api.txt", mode="w", encoding="utf-8") as file:
+    file.write(j_son)
+
+#n=0
+# for k, v in j_son.items():
+#     print(n, ": ", k)
