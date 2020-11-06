@@ -69,7 +69,7 @@ else:
     #le chemin de l'installation de tesseract
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
-def detect_VN_ING(img_adress=None, img_file=None):
+def detect_VN_ING(img_adress=None, img_file=None, fast=1):
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
     # pytesseract only accept rgb, so we convert bgr to rgb
@@ -85,20 +85,21 @@ def detect_VN_ING(img_adress=None, img_file=None):
     #print(boxes) # to see
 
     #######################################################################################################
-    hImg, wImg, _ = img.shape
-    conf = r'--oem 3 --psm 6 outputbase digits'
-    boxes = pytesseract.image_to_boxes(img, config=conf)
-    boxes_splitted = boxes.splitlines()
-    l1 = []
-    l2 = []
-    for b in boxes_splitted:
-        b = b.split(' ')
-        l1.append(tuple(b))
-        l2.append(b[1:])
-        # print(b)
-        x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
-        cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 2)
-        cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 255), 2)
+    if fast == 0:
+        hImg, wImg, _ = img.shape
+        conf = r'--oem 3 --psm 6 outputbase digits'
+        boxes = pytesseract.image_to_boxes(img, config=conf)
+        boxes_splitted = boxes.splitlines()
+        l1 = []
+        l2 = []
+        for b in boxes_splitted:
+            b = b.split(' ')
+            l1.append(tuple(b))
+            l2.append(b[1:])
+            # print(b)
+            x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+            cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 2)
+            cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 255), 2)
     #######################################################################################################
     # boxes_splitted = boxes.splitlines()
     # text_splitted = []
