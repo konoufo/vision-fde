@@ -1,6 +1,8 @@
+from __future__ import absolute_import, unicode_literals
 import cv2
 import pytesseract
 from pytesseract import Output
+from celery import  shared_task
 import os
 import time
 
@@ -69,6 +71,7 @@ else:
     #le chemin de l'installation de tesseract
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
+@shared_task()
 def detect_VN_ING(img_adress=None, img_file=None, fast=1):
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
@@ -168,6 +171,7 @@ def detect_VN_ING(img_adress=None, img_file=None, fast=1):
 # print(ingredients["Ingrédients"])
 #
 
+@shared_task()
 def process(img_adress=None, img_file=None):
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
@@ -202,6 +206,8 @@ def process(img_adress=None, img_file=None):
 
     return (img, boxes_splitted, boxes_stringed)
 # process(img_add)
+
+@shared_task()
 def find_characters(img_adress=None, img_file=None):
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
@@ -223,7 +229,7 @@ def find_characters(img_adress=None, img_file=None):
 
     return img, boxes_splitted
 
-
+@shared_task()
 def find_only_digits(img_adress=None, img_file=None):
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
@@ -247,6 +253,7 @@ def find_only_digits(img_adress=None, img_file=None):
 
     return img, boxes_splitted
 
+@shared_task()
 def find_nutrition_digits(img_adress=None, img_file=None):
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
@@ -270,6 +277,7 @@ def find_nutrition_digits(img_adress=None, img_file=None):
     return img, boxes_splitted, l1, l2
 
 ###################################################################################
+@shared_task()
 def detect_contours(img_adress=None, img_file=None):
     img = img_file if img_file is not None else cv2.imread(img_adress)
     # conversion en niveaux de gris(127,255,0)
@@ -305,6 +313,7 @@ def detect_contours(img_adress=None, img_file=None):
             n = n + 1
     return img, sub_figures
 
+@shared_task()
 def mainproc(img_adress=None, img_file=None):
     img, sub_fig = detect_contours(img_adress=img_add, img_file=img_file)
     img1, bc_splitted = find_characters(img_file=img)
