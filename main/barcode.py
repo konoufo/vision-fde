@@ -1,3 +1,5 @@
+from __future__ import absolute_import, unicode_literals
+from celery import  shared_task
 from pyzbar import pyzbar
 import argparse
 import cv2
@@ -11,7 +13,7 @@ import requests
 #image = cv2.imread(args["image"])
 
 path = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\produit01.jpg"
-
+@shared_task
 def get_string_barcode(img_addreess=None, img_file=None):
     image = img_file if img_file is not None else cv2.imread(img_addreess)
     barcodes = pyzbar.decode(image)
