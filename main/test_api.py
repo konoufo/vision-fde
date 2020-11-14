@@ -1,7 +1,7 @@
 import requests
 import json
 
-file_path = "../media/images/produit01.jpg"
+file_path = "../media/images/produit02.jpg"
 #url = "https://{domain_prefix}.vendhq.com/api/2.0/products/{product_id}/actions/image_upload"
 
 def requete_post(file_path=None, url=None):
