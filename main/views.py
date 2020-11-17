@@ -88,7 +88,7 @@ def image_upload_view(request):
                                                        'img_proc': cloudinary.CloudinaryImage(image_proc_id).build_url(),
                                                        'img_proc_ingredients': ingredients,
                                                        'img_proc_valeurs_nutritives': valeurs_nutritives,
-                                                       'barcode_datas': fichier_json[0:500],
+                                                       'barcode_datas': fichier_json,
                                                        'radio': var,
                                                        'barcode_str': barcode_str,
                                                        })
