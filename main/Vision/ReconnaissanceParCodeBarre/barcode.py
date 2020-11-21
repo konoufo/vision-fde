@@ -4,12 +4,7 @@ from pyzbar import pyzbar
 import argparse
 import cv2
 import requests
-<<<<<<< HEAD:main/Vision/ReconnaissanceParCodeBarre/barcode.py
-import numpy as np
-=======
 import json
-
->>>>>>> 1c49878031563cc68be154d2cab5f52f775b0055:main/barcode.py
 #
 # ap = argparse.ArgumentParser()
 # ap.add_argument("-i", "--image", required=True, help="Path to input image")
