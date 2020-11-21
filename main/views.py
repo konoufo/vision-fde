@@ -30,7 +30,7 @@ def image_upload_view(request):
             obj.image_id = result["public_id"]
             obj.save()
 
-            weigths = "C:/Users/Erwin Anoh/PycharmProjects/D4/D4/main/Vision/ReconnaissanceDImages/yolov3_training_last.weights"
+            weigths = "C:/Users/Erwin Anoh/PycharmProjects/weights/yolov3_training_last.weights"
             cfgs = "C:/Users/Erwin Anoh/PycharmProjects/D4/D4/main/Vision/ReconnaissanceDImages/yolov3_testing.cfg"
 
             image_stream.seek(0)

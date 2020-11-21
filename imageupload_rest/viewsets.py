@@ -24,7 +24,7 @@ class UploadImageViewset(viewsets.ModelViewSet):
         image = self.get_object()
         if image is not None:
             img = self.validate_image(image)
-            weigths = "C:/Users/Erwin Anoh/PycharmProjects/D4/D4/main/Vision/ReconnaissanceDImages/yolov3_training_last.weights"
+            weigths = "C:/Users/Erwin Anoh/PycharmProjects/weights/yolov3_training_last.weights"
             cfgs = "C:/Users/Erwin Anoh/PycharmProjects/D4/D4/main/Vision/ReconnaissanceDImages/yolov3_testing.cfg"
             img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img, fast=1)
             logos_detectes, img_proc = yolo_object_detection.detect_logo(img_file=img_proc, weigths=weigths, cfgs=cfgs)

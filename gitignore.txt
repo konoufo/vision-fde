@@ -9,9 +9,6 @@ __pycache__/
 # C extensions
 *.so
 
-#POIDS ML
-.weights
-
 # Distribution / packaging
 .Python
 build/
