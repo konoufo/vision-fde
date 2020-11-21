@@ -1,10 +1,12 @@
 from __future__ import absolute_import, unicode_literals
+from celery import shared_task
 import cv2
 import pytesseract
 from pytesseract import Output
-from celery import shared_task
 import os
+import numpy as np
 import time
+import urllib
 
 #https://www.inspection.gc.ca/exigences-en-matiere-d-etiquetage-des-aliments/etiquetage/industrie/etiquetage-nutritionnel/fra/1386881685057/1386881685870
 #img_add = 'D4\\main\\static\\main\\img\\produit01.jpg'
@@ -71,10 +73,10 @@ else:
     #le chemin de l'installation de tesseract
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
-@shared_task()
-def detect_VN_ING(img_adress=None, img_file=None, fast=1):
-
-    img = img_file if img_file is not None else cv2.imread(img_adress)
+@shared_task
+def detect_VN_ING(img_address=None, img_file=None, fast=1):
+    # img_file = np.array(img_file)
+    img = img_file if img_file is not None else cv2.imread(img_address)
     # pytesseract only accept rgb, so we convert bgr to rgb
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     ##############################################
@@ -85,7 +87,7 @@ def detect_VN_ING(img_adress=None, img_file=None, fast=1):
     boxes = pytesseract.image_to_data(img)
     # boxes_dict = pytesseract.image_to_data(img, output_type=Output.DICT)
     Text = pytesseract.image_to_string(img)
-    #print(boxes) # to see
+    #print(Text) # to see
 
     #######################################################################################################
     if fast == 0:

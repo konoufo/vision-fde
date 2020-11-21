@@ -6,6 +6,5 @@ app_name = "main"
 
 urlpatterns = [
     # path('', views.index, name='index'),
-    path('response', views.response, name='response'),
     path('', views.image_upload_view)
 ]

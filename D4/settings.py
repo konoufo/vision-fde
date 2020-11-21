@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["alivisiond4.herokuapp.com", "*"]
 
-
+#ne pas exposer la cle
+#ne aps exposer
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'imageupload',
     'imageupload_rest',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # LOGIN_REDIRECT_URL = 'index'
 # LOGOUT_REDIRECT_URL = 'index'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+# celery setting.
+CELERY_CACHE_BACKEND = 'default'
+
+# django setting.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}
+

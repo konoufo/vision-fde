@@ -4,10 +4,12 @@ import requests
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from imageupload_rest.serializers import  UploadImageSerializer
+from imageupload_rest.serializers import UploadImageSerializer
 from imageupload.models import UploadImage
 from rest_framework.decorators import action
-from main import detect,barcode
+from main.Vision.ReconnaissanceDImages import yolo_object_detection
+from main.Vision.ReconnaissanceDeTexte import detect
+from main.Vision.ReconnaissanceParCodeBarre import barcode
 from django.conf import settings
 import os, cloudinary
 import cloudinary.uploader
@@ -22,9 +24,11 @@ class UploadImageViewset(viewsets.ModelViewSet):
         image = self.get_object()
         if image is not None:
             img = self.validate_image(image)
-            # val = detect.mainproc(img_file=img)
+            weigths = "C:/Users/Erwin Anoh/PycharmProjects/D4/D4/main/Vision/ReconnaissanceDImages/yolov3_training_last.weights"
+            cfgs = "C:/Users/Erwin Anoh/PycharmProjects/D4/D4/main/Vision/ReconnaissanceDImages/yolov3_testing.cfg"
             img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img, fast=1)
-            response = {'statut': 'success', 'Ingrédients': ingredients,'Valeurs nutritives': valeurs_nutritives}
+            logos_detectes, img_proc = yolo_object_detection.detect_logo(img_file=img_proc, weigths=weigths, cfgs=cfgs)
+            response = {'statut': 'success', 'Ingrédients': ingredients,'Valeurs nutritives': valeurs_nutritives, 'img_proc_logos': logos_detectes}
             return Response(response)
         else:
             return Response({'statut': 'echec'},

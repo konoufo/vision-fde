@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 
-image = cv2.imread('C:/Users/Erwin Anoh/PycharmProjects/D4/D4/media/images/general/jeuSwitchSurtable.jpg')
+image = cv2.imread('/D4/media/images/general/jeuSwitchSurtable.jpg')
 # image = cv2.imread('image-300x169.jpg')
 ###################################################################################
 #conversion en niveaux de gris
