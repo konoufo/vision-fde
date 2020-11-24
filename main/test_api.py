@@ -16,8 +16,12 @@ def requete_post(file_path=None, url=None):
     return response.text
 
 #####
+<<<<<<< HEAD
 url = "http://127.0.0.1:8000/api/images/"
 # url = "https://alivisiond4.herokuapp.com/api/images/"
+=======
+url = "https://alivisiond4.herokuapp.com/api/images/"
+>>>>>>> 1c49878031563cc68be154d2cab5f52f775b0055
 r_post = requete_post(file_path=file_path, url=url)
 print(r_post)
 
@@ -25,15 +29,23 @@ print(r_post)
 image_pk = json.loads(r_post)["pk"]
 
 #####
+<<<<<<< HEAD
 url_ri = "http://127.0.0.1:8000/api/images/"+str(image_pk)+"/reconImage/"
 # url_ri = "https://alivisiond4.herokuapp.com/api/images/"+str(image_pk)+"/reconImage/"
+=======
+url_ri = "https://alivisiond4.herokuapp.com/api/images/"+str(image_pk)+"/reconImage/"
+>>>>>>> 1c49878031563cc68be154d2cab5f52f775b0055
 r_post_reconImage = requete_post(url=url_ri)
 #utiliser json.loads(r_post_reconImage) pour convertir la reponse en dictionnaire json
 print(r_post_reconImage)
 
 #####
+<<<<<<< HEAD
 url_rb = "http://127.0.0.1:8000/api/images/"+str(image_pk)+"/reconBarcode/"
 # url_rb = "https://alivisiond4.herokuapp.com/api/images/"+str(image_pk)+"/reconBarcode/"
+=======
+url_rb = "https://alivisiond4.herokuapp.com/api/images/"+str(image_pk)+"/reconBarcode/"
+>>>>>>> 1c49878031563cc68be154d2cab5f52f775b0055
 r_post_reconBarcode = requete_post(url=url_rb)
 #utiliser json.loads(r_post_reconBarcode) pour convertir la reponse en dictionnaire json
 print(r_post_reconBarcode)

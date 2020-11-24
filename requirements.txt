@@ -13,5 +13,9 @@ sqlparse==0.3.1
 opencv-python-headless==4.4.0.44
 requests==2.24.0
 cloudinary==1.22.0
+<<<<<<< HEAD
 whitenoise==5.2.0
 celery==5.0.2
+=======
+whitenoise==5.2.0
+>>>>>>> 1c49878031563cc68be154d2cab5f52f775b0055

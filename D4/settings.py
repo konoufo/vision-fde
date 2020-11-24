@@ -26,6 +26,10 @@ SECRET_KEY = 'p7nmwrln(iwpw$5weq6195=o2(#(&=9nib!%5a!8loih4r&69e'
 DEBUG = True
 
 ALLOWED_HOSTS = ["alivisiond4.herokuapp.com", "*"]
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1c49878031563cc68be154d2cab5f52f775b0055
 
 #ne pas exposer la cle
 #ne aps exposer
@@ -42,7 +46,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'imageupload',
     'imageupload_rest',
+<<<<<<< HEAD
     'django_celery_results',
+=======
+>>>>>>> 1c49878031563cc68be154d2cab5f52f775b0055
 ]
 
 MIDDLEWARE = [
@@ -136,6 +143,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'main', 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # LOGIN_REDIRECT_URL = 'index'
+<<<<<<< HEAD
 # LOGOUT_REDIRECT_URL = 'index'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
@@ -150,3 +158,6 @@ CACHES = {
     }
 }
 
+=======
+# LOGOUT_REDIRECT_URL = 'index'
+>>>>>>> 1c49878031563cc68be154d2cab5f52f775b0055
