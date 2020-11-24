@@ -30,7 +30,10 @@ def image_upload_view(request):
             obj.image_id = result["public_id"]
             obj.save()
 
-            weigths = "C:/Users/Erwin Anoh/PycharmProjects/weights/yolov3_training_last.weights"
+            weigths = ["C:/Users/Erwin Anoh/PycharmProjects/weights/lait_du_canada.weights",
+                        "C:/Users/Erwin Anoh/PycharmProjects/weights/aliment_prepare_au_quebec.weights",
+                        "C:/Users/Erwin Anoh/PycharmProjects/weights/rain_fores.weights",
+                       ]
             cfgs = "C:/Users/Erwin Anoh/PycharmProjects/D4/D4/main/Vision/ReconnaissanceDImages/yolov3_testing.cfg"
 
             image_stream.seek(0)
@@ -42,7 +45,7 @@ def image_upload_view(request):
             img_proc_datas = None
             fichier_json = 500*""
             barcode_str = None
-            logos_detectes = None
+            logos_detectes = []
             # img = pd.DataFrame(img).to_json('data.json', orient='split')
             if var == "barcode":
                 # img: numpy.ndarray
@@ -53,9 +56,13 @@ def image_upload_view(request):
                 v = request.POST.get("vitesse")
                 if v == "non":
                     s = 0
-                img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img, fast=s)
-                logos_detectes, img_proc = yolo_object_detection.detect_logo(img_file=img_proc, weigths=weigths,cfgs=cfgs)
-
+                logo0, img_proc = yolo_object_detection.detect_logo(img_file=img, weigths=weigths[0],cfgs=cfgs, class_name="Lait du canada")
+                logo1, img_proc = yolo_object_detection.detect_logo(img_file=img_proc, weigths=weigths[1],cfgs=cfgs, class_name="Aliment préparé au Québec")
+                logo2, img_proc = yolo_object_detection.detect_logo(img_file=img_proc, weigths=weigths[2],cfgs=cfgs, class_name="Rain Forest Alliance")
+            img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img_proc, fast=s)
+            logos_detectes.append(logo0)
+            logos_detectes.append(logo1)
+            logos_detectes.append(logo2)
             img_proc = cv2.imencode(".png", img_proc)[1].tobytes()
             result = cloudinary.uploader.upload(img_proc, public_id=obj.image_id + "proc", overwrite=True)
             image_proc_id = result["public_id"]

@@ -9,15 +9,16 @@ import random
 # Load Yolo
 # weigths = "yolov3_training_last.weights"
 # cfgs = "yolov3_testing.cfg"
-img_path = "../../../media/images/produit.jpg"
+img_path = "../../../media/images/produit00.jpg"
 # def detect_logo(img_file=None, img_address=None):
 
 @shared_task
-def detect_logo(img_file=None, img_address=None, weigths="", cfgs=""):
+def detect_logo(img_file=None, img_address=None, weigths="", cfgs="", class_name=""):
+
     net = cv2.dnn.readNet(weigths, cfgs)
 
     # Name custom object
-    classes = ["Lait du canada"]
+    classes = [class_name]
 
     # Images path
     # images_path = glob.glob(r"D:\Pysource\Youtube\2020\105) Train Yolo google cloud\dataset\*.jpg")
@@ -33,7 +34,7 @@ def detect_logo(img_file=None, img_address=None, weigths="", cfgs=""):
 
     # Loading image
     img = img_file if img_file is not None else cv2.imread(img_address)
-    img = cv2.resize(img, None, fx=0.4, fy=0.4)
+    # img = cv2.resize(img, None, fx=0.4, fy=0.4)
     height, width, channels = img.shape
 
     # Detecting objects
@@ -87,12 +88,14 @@ def detect_logo(img_file=None, img_address=None, weigths="", cfgs=""):
     #
     # cv2.destroyAllWindows()
 
-    logos_detected.append(classes)
+    # logos_detected.append(classes)
 
     if detected:
-        return {"logos": logos_detected}, img
+        print("True: ", "class - ", class_name)
+        return classes[0], img
     else:
-        return {"logos": []}, img
+        print("False: ", "class - ", class_name)
+        return "", img
 
 
 #

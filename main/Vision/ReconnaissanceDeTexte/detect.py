@@ -2,21 +2,14 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 import cv2
 import pytesseract
-from pytesseract import Output
 import os
-import numpy as np
-import time
-import urllib
-
-#https://www.inspection.gc.ca/exigences-en-matiere-d-etiquetage-des-aliments/etiquetage/industrie/etiquetage-nutritionnel/fra/1386881685057/1386881685870
-#img_add = 'D4\\main\\static\\main\\img\\produit01.jpg'
-
-#img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\ingredients\\images (29).jpg"
-#img_add = "C:\\Users\\Erwin Anoh\\PycharmProjects\\D4\\D4\\media\\images\\codesBarre\\téléchargement (5).jpg"
-# https://www.murtazahassan.com/courses/opencv-projects/
-# control + left click
+import re
 """"
-    https://www.canada.ca/fr/sante-canada/services/comprendre-etiquetage-aliments/tableau-valeur-nutritive.html
+Quelques liens utiles
+    1 - https://www.murtazahassan.com/courses/opencv-projects/
+    2 - https://www.inspection.gc.ca/exigences-en-matiere-d-etiquetage-des-aliments/etiquetage/industrie/etiquetage-nutritionnel/fra/1386881685057/1386881685870
+    3 - https://www.canada.ca/fr/sante-canada/services/comprendre-etiquetage-aliments/tableau-valeur-nutritive.html
+    
     Il vous donne également des renseignements sur les 13 principaux nutriments :
 
     les lipides
@@ -32,6 +25,7 @@ import urllib
     la vitamine C
     le calcium
     le fer
+    
     Le saviez-vous?
     Il y a 13 principaux nutriments qui doivent figurer sur un tableau de la valeur nutritive. Cependant, voici une liste de certains des nutriments qui sont optionnels :
 
@@ -48,25 +42,30 @@ import urllib
     la vitamine D
     la vitamine E
     le zinc
-    """
-nutriments_principaux_13 = "lipides, lipides saturés,lipides trans, cholestérol, sodium, glucides, fibres, sucres, protéines, vitamine A,vitamine C, calcium, Fer"
+"""
+nutriments_principaux_13 = "lipides, lipides saturés,lipides trans, cholestérol, sodium, glucides, fibres, sucres, protéines, protein,carboxhydrate,sugar,sugars,calories,calorie,cholesterol, vitamine A,vitamine C, calcium, Fer"
 nutriments_principaux_13 = nutriments_principaux_13.split(",")
-nutriments_speciaux = "saturés, trans, polyinsaturés, oméga, monoinsaturés, fibres, sucres, B6, B-6, B12, B-12, vitamine"
+nutriments_speciaux = "saturés, saturated, trans, polyinsaturés, oméga, monoinsaturés, fibres, sucres, B6, B-6, B12, B-12, vitamine,iron"
 nutriments_speciaux = nutriments_speciaux.split(",")
 nutriments_facultatifs = "folate, magnésium, niacine, phosphore, potassium, riboflavine, sélénium, thiamine, vitamine B12, vitamine B6, vitamine D, vitamine E, zinc" \
-                         ",Pantothénate"
+                         ",Pantothénate,Valeur,Valeur é, Valeur énergétique"
 nutriments_facultatifs = nutriments_facultatifs.split(",")
 unites = "g,mh,%,yg"
 all = nutriments_principaux_13 + nutriments_facultatifs + nutriments_speciaux
-#print(all)
-img_add = "../media/images/produit02.jpg"
+ingr = "ingrédients,Ingredients,INGREDIENTS,INGRÉDIENTS,ingredients," \
+           "Ingrédients,INGREDIENT,INGRÉDIENT,Ingredient," \
+           "Ingrédient,Ingredient,Ingrédient"
+ingr = ingr.split(",")
+
+arret_val = "val,Val,VAL"
+arret_ingr = "ING,ing,Ing"
+arret_val = arret_val.split(",")
+arret_ingr = arret_ingr.split(",")
 
 '''
     CONFIGURATION DE LA COMMAND LINE DE PYTESSERACT
     VERIFIE SI ON UTILISE HEROKU OU PAS
-
 '''
-
 if os.environ.get("ENVIRONMENT", None) == "heroku":
     pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"
 else:
@@ -75,19 +74,13 @@ else:
 
 @shared_task
 def detect_VN_ING(img_address=None, img_file=None, fast=1):
-    # img_file = np.array(img_file)
     img = img_file if img_file is not None else cv2.imread(img_address)
     # pytesseract only accept rgb, so we convert bgr to rgb
+
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    ##############################################
-    ##### Detecting Words  ######
-    ##############################################
-    #[   0          1           2           3           4          5         6       7       8        9        10       11 ]
-    #['level', 'page_num', 'block_num', 'par_num', 'line_num', 'word_num', 'left', 'top', 'width', 'height', 'conf', 'text']
     boxes = pytesseract.image_to_data(img)
-    # boxes_dict = pytesseract.image_to_data(img, output_type=Output.DICT)
     Text = pytesseract.image_to_string(img)
-    #print(Text) # to see
+    print(Text) # to see
 
     #######################################################################################################
     if fast == 0:
@@ -129,49 +122,92 @@ def detect_VN_ING(img_address=None, img_file=None, fast=1):
         # print(n,": " , i)
         n = n + 1
 
-    # with open("p_valnutritive.txt", "w", encoding="utf-8") as file:
-    #     for line in valeurs_nutritives:
-    #         file.write(str(line[0]) + "\n")
-
     valeurs_nutritives = {}
     for j in all:
         valeurs_nutritives[j] = []
         for i in Text_splitted:
             if (i.replace(" ","")).lower().find(j.replace(" ","").lower()) != -1:
                 # print(j, ": ", i)
-                valeurs_nutritives[j].append(i)
+                valeurs_nutritives[j].append(i.replace(j, "").lower())
 
+    # print(valeurs_nutritives)
     # print("-------------------------------------")
+
     for k in list(valeurs_nutritives):
         if valeurs_nutritives[k] == []:
             valeurs_nutritives.pop(k)
+    for k, v in valeurs_nutritives.items():
+        for i in range(len(v)):
+            # print(v[i], "===", k)
+            v[i] = v[i].replace(k, "")
+            v[i] = v[i].replace("9 ", "g ")
+
     ingredients = []
-    l = 0
+    debut = []
+    n=0
     for m in Text_splitted:
-       l = l+1
-       if m.lower().replace(" ", "").find("ingrédients".lower()) != -1:
-           break
+       n = n+1
+       for i in ingr:
+           if m.lower().replace(" ", "").find(i) != -1:
+               debut.append(n)
 
-    for i in range(l, len(Text_splitted)-1):
-        ingredients.append(Text_splitted[i])
-        if Text_splitted[i] == '':
-            break
+    fin = []
+    n=0
+    for i in range(len(Text_splitted)):
+        n = n + 1
+        try:
+            if Text_splitted[i] == '' != -1 and n > min(debut):
+                fin.append(n)
+        except ValueError:
+            pass
+    f = 0
+    a = 0
+    try:
+        f = min(fin)
+        for i in arret_ingr:
+            if Text_splitted[f].find(j) == -1:
+                f += 1
+    except (ValueError, IndexError):
+        pass
+ # print("debut: ", debut, "fin", fin)
 
-    #print("ingredients: ", ingredients)
+    if len(debut) > 0 and len(fin)>0:
+        a = min(debut) - 2
+        while Text_splitted[a] == '':
+            a += 1
+        if len(fin) > 1:
+            for i in range(a, fin[1]-2):
+                ingredients.append(Text_splitted[i])
+        else:
+            for i in range(a, fin[0]-2):
+                ingredients.append(Text_splitted[i])
 
+    ingredients = "".join(ingredients)
+    ingredients = cleaner(ingredients)
 
-    return img, Text, valeurs_nutritives, {"Ingrédients":ingredients}
-#
+    # print("valeurs nutritives: ", valeurs_nutritives)
+    # print("ingredients: ", ingredients)
+
+    return img, Text, valeurs_nutritives, ingredients
+
+def cleaner(ingredients):
+    list_ingredients = ingredients
+    for i in list_ingredients:
+        if i.isalpha() == False and i.isdigit() == False \
+                and i != "%" and i != "," and i != "." and i != " " and i != "(" and i != ")":
+            list_ingredients = list_ingredients.replace(i, ",")
+
+    for i in ingr:
+        list_ingredients = list_ingredients.replace(i,"")
+    return list_ingredients
+
+# img_add = "../../../media/images/produit03.jpg"
+# img_add = "../../../media/images/produit04 (5).jpeg"
+# img_add = "../../../media/images/produit04.png"
 # img, Text, valeurs_nutritives, ingredients = detect_VN_ING(img_add)
 # cv2.imshow("img", img)
 # cv2.waitKey(0)
 
-#
-# for k, v in valeurs_nutritives.items():
-#         if v!= []:
-#             print(k, ": ", v)
-# print(ingredients["Ingrédients"])
-#
 
 @shared_task
 def process(img_adress=None, img_file=None):
