@@ -2,7 +2,7 @@
 DESIGN IV - projet Ali Quebec
 
 dépendances à installer: 
-pip install -r requirements.txt
+> pip install -r requirements.txt
 
 langages:
 python
@@ -13,7 +13,7 @@ sql
 
 
 # Lancer le serveur
-python manage.py runserver
+> python manage.py runserver
 
 
 # Utilisation 1 - GUI
@@ -33,7 +33,10 @@ la reconnaissance par vision artificielle fais deux types de traitements:
 - ue reconnaissance de logos utilisant du machine learning
 
 Pour la reconnaissance de logos, il faut obligatoirement créer un dossier 'weights' dans la racine contenant le projet et y insérer les différents fichiers .weights :
+> dir  
+  
   > GEL30211D4E1
+  
   > weights/*.weigts
 
   
