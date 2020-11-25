@@ -48,7 +48,8 @@ def get_string_barcode(img_address=None, img_file=None):
         ingredients = data['product']['ingredients_text']
         countries = data['product']['countries']
     except:
-        print("Please enter a valide code")
+        # print("Please enter a valide code")
+        pass
     description = ["Product brand", "Product name", "Nutriments", "Ingredients", "Countries"]
     information = [marque, product_name, nutriments, ingredients, countries]
     fichier = dict(zip(description, information))

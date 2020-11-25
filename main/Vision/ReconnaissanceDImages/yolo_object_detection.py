@@ -14,9 +14,10 @@ img_path = "../../../media/images/produit00.jpg"
 
 @shared_task
 def detect_logo(img_file=None, img_address=None, weigths="", cfgs="", class_name=""):
-
-    net = cv2.dnn.readNet(weigths, cfgs)
-
+    try:
+        net = cv2.dnn.readNet(weigths, cfgs)
+    except:
+        return "impossible de lire le fichiers .weights", img_file
     # Name custom object
     classes = [class_name]
 
@@ -72,7 +73,7 @@ def detect_logo(img_file=None, img_address=None, weigths="", cfgs="", class_name
                 class_ids.append(class_id)
 
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
-    print(indexes)
+    # print(indexes)
     font = cv2.FONT_HERSHEY_PLAIN
     for i in range(len(boxes)):
         if i in indexes:
@@ -91,10 +92,10 @@ def detect_logo(img_file=None, img_address=None, weigths="", cfgs="", class_name
     # logos_detected.append(classes)
 
     if detected:
-        print("True: ", "class - ", class_name)
+        # print("True: ", "class - ", class_name)
         return classes[0], img
     else:
-        print("False: ", "class - ", class_name)
+        # print("False: ", "class - ", class_name)
         return "", img
 
 

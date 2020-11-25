@@ -80,7 +80,7 @@ def detect_VN_ING(img_address=None, img_file=None, fast=1):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     boxes = pytesseract.image_to_data(img)
     Text = pytesseract.image_to_string(img)
-    print(Text) # to see
+    # print(Text) # to see
 
     #######################################################################################################
     if fast == 0:
