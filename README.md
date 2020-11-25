@@ -18,16 +18,16 @@ python manage.py runserver
 
 # Utilisation 1 - GUI
 
-## Aller sur le lien
+## 1 - Aller sur le lien
 http://127.0.0.1:8000/
 
-## Vision artificielle
+## 2.1 - Vision artificielle
 choisir reconnaissance par vision et le type traitement
-## Code barre
+## 2.2 - Code barre
 chosir reconnaissance de code barre
-## Upload
+## 3 - Upload
 choisir une image depuis votre ordinateur ou faire un glisser-déposer de l'image
-## cliquer sur soumettre
+## 4 - cliquer sur soumettre
 la reconnaissance par vision artificielle fais deux types de traitements:
 - une reconnaissance de texte (ingrédients et valeurs nutritives)
 - ue reconnaissance de logos utilisant du machine learning
