@@ -35,9 +35,9 @@ la reconnaissance par vision artificielle fais deux types de traitements:
 Pour la reconnaissance de logos, il faut obligatoirement créer un dossier 'weights' dans la racine contenant le projet et y insérer les différents fichiers .weights :
 > dir  
   
-  > GEL30211D4E1
+  >> GEL30211D4E1
   
-  > weights/*.weigts
+  >> weights/*.weigts
 
   
 # Utilisation 2 - API
