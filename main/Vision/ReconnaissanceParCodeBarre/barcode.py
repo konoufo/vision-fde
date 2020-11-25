@@ -33,6 +33,12 @@ def get_string_barcode(img_address=None, img_file=None):
         # cv2.waitKey(0)
 
     url = "https://world.openfoodfacts.org/api/v0/product/[" + barcodeData + "].json"
+    marque = "None"
+    product_name = "None"
+    nutriments = "None"
+    ingredients = "None"
+    countries = "None"
+
     try:
         response = requests.get(url)
         data = json.loads(response.content)

@@ -1,18 +1,31 @@
-# import re
-#
-# my_str ="a,b,c,test(1,2,3),g,h,test(2,4,6)"
-#
-# print(re.split('(?<!\(.),(?!.\))', my_str))
+#git filter-branch --force --index-filter "git rm --cached --ignore-unmatch main/Vision/ReconnaissanceDImages/yolov3_training_last.weights"  --prune-empty --tag-name-filter cat -- --all
+import cv2
+import numpy as np
+import cloudinary.uploader
+from main.Vision.ReconnaissanceDeTexte import detect
+from io import BytesIO
 
+def serializerTest():
+    with open("produit02.jpg", "rb") as f:
+        image = f
+        image_stream = BytesIO(image.read())
 
-nutriments_principaux_13 = "lipides, lipides saturés,lipides trans, cholestérol, sodium, glucides, fibres, sucres, protéines, protein,carboxhydrate,sugar,sugars,calories,calorie,cholesterol, vitamine A,vitamine C, calcium, Fer"
-nutriments_principaux_13 = nutriments_principaux_13.split(",")
-nutriments_speciaux = "saturés, saturated, trans, polyinsaturés, oméga, monoinsaturés, fibres, sucres, B6, B-6, B12, B-12, vitamine,iron"
-nutriments_speciaux = nutriments_speciaux.split(",")
-nutriments_facultatifs = "folate, magnésium, niacine, phosphore, potassium, riboflavine, sélénium, thiamine, vitamine B12, vitamine B6, vitamine D, vitamine E, zinc" \
-                         ",Pantothénate,Valeur,Valeur é, Valeur énergétique"
-nutriments_facultatifs = nutriments_facultatifs.split(",")
-all = nutriments_principaux_13 + nutriments_facultatifs + nutriments_speciaux
+    result = cloudinary.uploader.upload(image_stream)
 
-print(all)
-print(list(set(all)))
+    weigths = ["C:/Users/Erwin Anoh/PycharmProjects/weights/lait_du_canada.weights",
+               "C:/Users/Erwin Anoh/PycharmProjects/weights/aliment_prepare_au_quebec.weights",
+               "C:/Users/Erwin Anoh/PycharmProjects/weights/rain_fores.weights",
+               ]
+    cfgs = "main/Vision/ReconnaissanceDImages/yolov3_testing.cfg"
+
+    image_stream.seek(0)
+    file_bytes = np.asarray(bytearray(image_stream.read()), dtype=np.uint8)
+    img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+
+    data = img.tolist()
+    a = np.array(data)
+
+    var = img == a
+    print(var.all(), "??")
+
+    detect.detect_VN_ING(img_file=a, fast=0)

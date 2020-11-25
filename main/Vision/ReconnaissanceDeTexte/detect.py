@@ -203,7 +203,7 @@ def cleaner(ingredients):
 
 # img_add = "../../../media/images/produit03.jpg"
 # img_add = "../../../media/images/produit04 (5).jpeg"
-# img_add = "../../../media/images/produit04.png"
+# # img_add = "../../../media/images/produit04.png"
 # img, Text, valeurs_nutritives, ingredients = detect_VN_ING(img_add)
 # cv2.imshow("img", img)
 # cv2.waitKey(0)
