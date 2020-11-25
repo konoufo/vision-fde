@@ -39,7 +39,17 @@ Pour la reconnaissance de logos, il faut obligatoirement créer un dossier 'weig
   
 # Utilisation 2 - API
 S'assurer que le serveur est bien lancé;
+
 Ouvrir le fichier main/test_api.py;
+
 changer le file_path par le chemin de l'image que vous souhaitez traiter;
+
 Lancer(run) le fichier test_api.py
+
 Vous pouvez également faire votre propre fichier de requêtes pour l'api ou passer par un autre service comme Postman; les adresses pour les différents traitements sont dans le fichier.
+
+
+# Utilisation 3 - lien web heroku (en développement)
+Il est possible de réaliser la plupart des étapes ci-dessus en se rendant sur le lien : http://alivisiond4.herokuapp.com/
+
+Le traitement de la reconnaissance de logos n'y ait pas supporté par contre.
