@@ -2,10 +2,7 @@
 DESIGN IV - projet Ali Quebec
 
 dépendances à installer: 
-django
-opencv-python
-tesseract
-pytesseract
+pip install -r requirements.txt
 
 langages:
 python
@@ -13,3 +10,6 @@ html
 css
 javascript
 sql
+
+
+# F
