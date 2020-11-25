@@ -7,7 +7,6 @@ import json
 uri = "http://127.0.0.1:8000"
 
 file_path = "../media/images/produit00.jpg"
-
 def requete_post(file_path=None, url=None):
     files = {}
     headers = {}

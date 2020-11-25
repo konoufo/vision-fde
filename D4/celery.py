@@ -24,12 +24,8 @@ def debug_task(self):
 
 '''
 lister les tasks celery -A D4 worker -l info --pool=solo
-
-
 python manage.py shell
 from D4.tasks import add
 add.delay(4,65)
 add.apply_async((2,2), countdown=5)
-
-
 '''
