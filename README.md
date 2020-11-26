@@ -10,7 +10,8 @@ html
 css
 javascript
 sql
-
+# fichiers .weights pour la détections de logos
+https://drive.google.com/drive/folders/1bdG7JC8ITShO2RIjrGs-FbZtlANxaoBk?usp=sharing
 
 # Lancer le serveur
 > python manage.py runserver
