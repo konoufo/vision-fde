@@ -1,21 +1,14 @@
 # GEL3021D4E1
 DESIGN IV - projet Ali Quebec
 
-dépendances à installer: 
+## dépendances à installer: 
 > pip install -r requirements.txt
 
-langages:
-python
-html
-css
-javascript
-sql
-# fichiers .weights pour la détections de logos
+## fichiers .weights pour la détections de logos
 https://drive.google.com/drive/folders/1bdG7JC8ITShO2RIjrGs-FbZtlANxaoBk?usp=sharing
 
-# Lancer le serveur
+# Lancer le serveur en local
 > python manage.py runserver
-
 
 # Utilisation 1 - GUI
 
