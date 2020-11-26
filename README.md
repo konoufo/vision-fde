@@ -5,7 +5,7 @@ DESIGN IV - projet Ali Quebec
 > pip install -r requirements.txt
 
 ## Clé cloudinary
-> set CLOUDINARY_URL=cloudinary://622133235621341:UFeropQpSu2R6wWiKocKJZIE3sk@hxd7xpjcw
+
 
 ## Fichiers .weights pour la détections de logos
 https://drive.google.com/drive/folders/1bdG7JC8ITShO2RIjrGs-FbZtlANxaoBk?usp=sharing
