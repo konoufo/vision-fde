@@ -14,6 +14,7 @@ pip install -r requirements.txt
 ```
 ## Tesseract
 installer tesseract dans le repertoire par défaut C:\Program Files\Tesseract-OCR ou alors le changer dans detect.py.
+https://github.com/UB-Mannheim/tesseract/wiki
 
 ## Clé cloudinary
 
