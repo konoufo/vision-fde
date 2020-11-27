@@ -2,8 +2,9 @@
 DESIGN IV - projet Ali Quebec
 
 ## Dépendances à installer: 
-> pip install -r requirements.txt
-
+```bash
+pip install -r requirements.txt
+```
 ## Clé cloudinary
 
 
@@ -11,7 +12,9 @@ DESIGN IV - projet Ali Quebec
 https://drive.google.com/drive/folders/1bdG7JC8ITShO2RIjrGs-FbZtlANxaoBk?usp=sharing
 
 # Lancer le serveur en local
-> python manage.py runserver
+```bash
+python manage.py runserver
+```
 
 # Utilisation 1 - GUI
 
