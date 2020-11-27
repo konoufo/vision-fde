@@ -12,8 +12,10 @@ source env/bin/activate  # On Windows, use .\venv\scripts\activate.bat
 ```bash
 pip install -r requirements.txt
 ```
-## Clé cloudinary
+## Tesseract
+installer tesseract dans le repertoire par défaut C:\Program Files\Tesseract-OCR ou alors le changer dans detect.py.
 
+## Clé cloudinary
 
 ## Fichiers .weights pour la détections de logos
 https://drive.google.com/drive/folders/1bdG7JC8ITShO2RIjrGs-FbZtlANxaoBk?usp=sharing
