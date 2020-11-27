@@ -2,6 +2,13 @@
 DESIGN IV - projet Ali Quebec
 
 ## Dépendances à installer: 
+Creer un virtual environment pour isoler localement nos packages et nos dépendences
+``` bash
+python3 -m venv env
+```
+``` bash
+source env/bin/activate  # On Windows, use .\venv\scripts\activate.bat
+```
 ```bash
 pip install -r requirements.txt
 ```
