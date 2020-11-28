@@ -1,7 +1,7 @@
-# GEL3021D4E1
+## GEL3021D4E1
 DESIGN IV - projet Ali Quebec
 
-## Dépendances à installer: 
+# Dépendances à installer: 
 Creer un virtual environment pour isoler localement nos packages et nos dépendences
 ``` bash
 python3 -m venv env
