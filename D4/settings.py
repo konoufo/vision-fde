@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'imageupload',
     'imageupload_rest',
     'django_celery_results',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
