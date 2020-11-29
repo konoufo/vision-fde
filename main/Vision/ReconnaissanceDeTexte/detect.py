@@ -1,9 +1,14 @@
 from __future__ import absolute_import, unicode_literals
+
+import urllib
+
 from celery import shared_task
 import cv2
 import pytesseract
 import os
 import re
+import unidecode
+from main.Vision.ReconnaissanceDeTexte.detect_with_gd_ocr import DriveStorage
 """"
 Quelques liens utiles
     1 - https://www.murtazahassan.com/courses/opencv-projects/
@@ -57,6 +62,15 @@ ingr = "ingrédients,Ingredients,INGREDIENTS,INGRÉDIENTS,ingredients," \
            "Ingrédient,Ingredient,Ingrédient"
 ingr = ingr.split(",")
 
+all = [unidecode.unidecode(i).lower() for i in all]
+all = list(set(all))
+all = [i.strip() for i in all]
+# print(all)
+
+ingr = [unidecode.unidecode(i).lower() for i in ingr]
+ingr = list(set(ingr))
+
+
 arret_val = "val,Val,VAL"
 arret_ingr = "ING,ing,Ing"
 arret_val = arret_val.split(",")
@@ -73,31 +87,29 @@ else:
     pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
 @shared_task
-def detect_VN_ING(img_address=None, img_file=None, fast=1):
+def detect_VN_ING(img_address=None, img_file=None, using_gd_ocr=0, fichier=None):
+
     img = img_file if img_file is not None else cv2.imread(img_address)
     # pytesseract only accept rgb, so we convert bgr to rgb
 
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     boxes = pytesseract.image_to_data(img)
-    Text = pytesseract.image_to_string(img)
-    # print(Text) # to see
 
-    #######################################################################################################
-    if fast == 0:
-        hImg, wImg, _ = img.shape
-        conf = r'--oem 3 --psm 6 outputbase digits'
-        boxes = pytesseract.image_to_boxes(img, config=conf)
-        boxes_splitted = boxes.splitlines()
-        l1 = []
-        l2 = []
-        for b in boxes_splitted:
-            b = b.split(' ')
-            l1.append(tuple(b))
-            l2.append(b[1:])
-            # print(b)
-            x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
-            cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 2)
-            cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 255), 2)
+    #if fast == 0:
+    hImg, wImg, _ = img.shape
+    conf = r'--oem 3 --psm 6 outputbase digits'
+    boxes = pytesseract.image_to_boxes(img, config=conf)
+    boxes_splitted = boxes.splitlines()
+    l1 = []
+    l2 = []
+    for b in boxes_splitted:
+        b = b.split(' ')
+        l1.append(tuple(b))
+        l2.append(b[1:])
+        # print(b)
+        x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+        cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 2)
+        cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 255), 2)
     #######################################################################################################
     # boxes_splitted = boxes.splitlines()
     # text_splitted = []
@@ -117,76 +129,100 @@ def detect_VN_ING(img_address=None, img_file=None, fast=1):
 
     ###################################################################################################
     n =0
-    Text_splitted = Text.split('\n')
-    for i in Text_splitted:
-        # print(n,": " , i)
-        n = n + 1
-
-    valeurs_nutritives = {}
-    for j in all:
-        valeurs_nutritives[j] = []
-        for i in Text_splitted:
-            if (i.replace(" ","")).lower().find(j.replace(" ","").lower()) != -1:
-                # print(j, ": ", i)
-                valeurs_nutritives[j].append(i.replace(j, "").lower())
-
-    # print(valeurs_nutritives)
-    # print("-------------------------------------")
-
-    for k in list(valeurs_nutritives):
-        if valeurs_nutritives[k] == []:
-            valeurs_nutritives.pop(k)
-    for k, v in valeurs_nutritives.items():
-        for i in range(len(v)):
-            # print(v[i], "===", k)
-            v[i] = v[i].replace(k, "")
-            v[i] = v[i].replace("9 ", "g ")
-
+    Text= ""
     ingredients = []
-    debut = []
-    n=0
-    for m in Text_splitted:
-       n = n+1
-       for i in ingr:
-           if m.lower().replace(" ", "").find(i) != -1:
-               debut.append(n)
+    valeurs_nutritives = []
+    Text_splitted = []
+    if using_gd_ocr == 1:
+        drive = DriveStorage()
 
-    fin = []
-    n=0
-    for i in range(len(Text_splitted)):
-        n = n + 1
-        try:
-            if Text_splitted[i] == '' != -1 and n > min(debut):
-                fin.append(n)
-        except ValueError:
-            pass
-    f = 0
-    a = 0
-    try:
-        f = min(fin)
-        for i in arret_ingr:
-            if Text_splitted[f].find(j) == -1:
-                f += 1
-    except (ValueError, IndexError):
-        pass
- # print("debut: ", debut, "fin", fin)
+        # with open(img_add, "rb") as file:
+        lien = drive.upload_file(fichier)
+        file = urllib.request.urlopen(lien)
 
-    if len(debut) > 0 and len(fin)>0:
-        a = min(debut) - 2
-        while Text_splitted[a] == '':
-            a += 1
-        if len(fin) > 1:
-            for i in range(a, fin[1]-2):
-                ingredients.append(Text_splitted[i])
+        for line in file:
+            decoded_line = line.decode("utf-8")
+            Text_splitted.append(decoded_line)
+
+        # detect_with_gd_ocr.process(img_address=img_address)
+        # with open("output.txt", "r", encoding="utf-8") as file:
+        #     Text_splitted = file.readlines()
+        for i in Text_splitted:
+            txt_to_search = unidecode.unidecode(i).lower()
+            t_ingr = re.search("ingr",txt_to_search)
+            t_val = re.search("val", txt_to_search)
+            if t_ingr:
+                ingredients.append(cleaner(i))
+            if t_val:
+                valeurs_nutritives.append(i)
+            for j in all:
+                t_val = re.search(j, txt_to_search)
+                if t_val:
+                    valeurs_nutritives.append(i)
+        valeurs_nutritives = list(set(valeurs_nutritives))
+            # valeurs_non_classees.split(" ")
+        # print(ingredients)
+        # print(valeurs_nutritives)
+        # for nutriment in all:
+        #     for valeur in valeurs_non_classees:
+        #         if valeur.find(nutriment):
+        #             t = re.search("[0-9].*", valeur)
+        #             if t:
+        #                 valeurs_nutritives[nutriment].append(t.group())
+    else:
+        Text = pytesseract.image_to_string(img)
+        Text_splitted = Text.split('\n')
+
+        #VALEURS NUTRITIVES
+        valeurs_nutritives = {}
+        indices_val = []
+        iv=0
+        for j in all:
+            valeurs_nutritives[j] = []
+            for i in Text_splitted:
+                if (unidecode.unidecode(i).replace(" ","")).lower().find(j.strip()) != -1:
+                    indices_val.append(iv)
+                    t = re.search("[0-9].*", i)
+                    if t:
+                        valeurs_nutritives[j].append(t.group())
+                iv += 1
+        for k in list(valeurs_nutritives):
+            if valeurs_nutritives[k] == []:
+                valeurs_nutritives.pop(k)
+        for k, v in valeurs_nutritives.items():
+            for i in range(len(v)):
+                v[i] = v[i].replace("9 ", "g ")
+
+        #INGREDIENTS
+        debut = None
+        for i in range(len(Text_splitted)):
+            if re.search("ingr",unidecode.unidecode(Text_splitted[i]).lower()):
+                debut = i
+                break
+        if len(indices_val)>0:
+            fin = min(indices_val)
         else:
-            for i in range(a, fin[0]-2):
-                ingredients.append(Text_splitted[i])
+            fin = None
+        if debut is not None:
+            if (fin < debut):
+                ingredients = Text_splitted[debut:]
+            elif fin is not None:
+                ingredients = Text_splitted[debut:fin]
+            ingredients = ",".join(ingredients).strip()
+            # for i ii
+            ingredients = cleaner(ingredients)
+    print("--------------------------------------TEXTE RECONNU---------------------------------------------")
+    for i in Text_splitted:
+        print(i)
+    print("--------------------------------------VALEURS NUTRITIVES---------------------------------------------")
 
-    ingredients = "".join(ingredients)
-    ingredients = cleaner(ingredients)
-
-    # print("valeurs nutritives: ", valeurs_nutritives)
-    # print("ingredients: ", ingredients)
+    if isinstance(valeurs_nutritives, dict):
+        for k, v in valeurs_nutritives.items():
+            print(k, v)
+    elif isinstance(valeurs_nutritives, list):
+        print(valeurs_nutritives)
+    print("--------------------------------------INGREDIENTS---------------------------------------------")
+    print("\n \n ingredients: ", ingredients)
 
     return img, Text, valeurs_nutritives, ingredients
 
@@ -201,16 +237,16 @@ def cleaner(ingredients):
         list_ingredients = list_ingredients.replace(i,"")
     return list_ingredients
 
-# img_add = "../../../media/images/produit03.jpg"
-# img_add = "../../../media/images/produit04 (5).jpeg"
-# # img_add = "../../../media/images/produit04.png"
-# img, Text, valeurs_nutritives, ingredients = detect_VN_ING(img_add)
+img_add = "../../../media/images/produit01.jpg"
+# img_add = "../../../media/images/produit04 (4).jpeg"
+# img_add = "../../../media/images/produit04.png"
+# img, Text, valeurs_nutritives, ingredients = detect_VN_ING(img_add, using_gd_ocr=1)
 # cv2.imshow("img", img)
 # cv2.waitKey(0)
 
 
 @shared_task
-def process(img_adress=None, img_file=None):
+def processus(img_adress=None, img_file=None):
 
     img = img_file if img_file is not None else cv2.imread(img_adress)
     # print(img)
@@ -353,7 +389,7 @@ def detect_contours(img_adress=None, img_file=None):
 
 @shared_task
 def mainproc(img_adress=None, img_file=None):
-    img, sub_fig = detect_contours(img_adress=img_add, img_file=img_file)
+    img, sub_fig = detect_contours(img_adress=img_adress, img_file=img_file)
     img1, bc_splitted = find_characters(img_file=img)
     img2, Text, valeurs_nutritives, ingredients = detect_VN_ING(img_file=img)
     img4, bnd_splitted, bnd_l1, bnd_l2 = find_nutrition_digits(img_file=img2)
