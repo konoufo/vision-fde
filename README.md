@@ -7,7 +7,7 @@ Creer un virtual environment pour isoler localement nos packages et nos dépende
 python3 -m venv env
 ```
 ``` bash
-source env/bin/activate  # On Windows, use .\venv\scripts\activate.bat
+source env/bin/activate  # On Windows, use env\scripts\activate.bat
 ```
 ```bash
 pip install -r requirements.txt
