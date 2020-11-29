@@ -134,41 +134,45 @@ def detect_VN_ING(img_address=None, img_file=None, using_gd_ocr=0, fichier=None)
     valeurs_nutritives = []
     Text_splitted = []
     if using_gd_ocr == 1:
-        drive = DriveStorage()
+        try :
+            drive = DriveStorage()
 
-        # with open(img_add, "rb") as file:
-        lien = drive.upload_file(fichier)
-        file = urllib.request.urlopen(lien)
+            # with open(img_add, "rb") as file:
+            lien = drive.upload_file(fichier)
+            file = urllib.request.urlopen(lien)
 
-        for line in file:
-            decoded_line = line.decode("utf-8")
-            Text_splitted.append(decoded_line)
+            for line in file:
+                decoded_line = line.decode("utf-8")
+                Text_splitted.append(decoded_line)
 
-        # detect_with_gd_ocr.process(img_address=img_address)
-        # with open("output.txt", "r", encoding="utf-8") as file:
-        #     Text_splitted = file.readlines()
-        for i in Text_splitted:
-            txt_to_search = unidecode.unidecode(i).lower()
-            t_ingr = re.search("ingr",txt_to_search)
-            t_val = re.search("val", txt_to_search)
-            if t_ingr:
-                ingredients.append(cleaner(i))
-            if t_val:
-                valeurs_nutritives.append(i)
-            for j in all:
-                t_val = re.search(j, txt_to_search)
+            # detect_with_gd_ocr.process(img_address=img_address)
+            # with open("output.txt", "r", encoding="utf-8") as file:
+            #     Text_splitted = file.readlines()
+            for i in Text_splitted:
+                txt_to_search = unidecode.unidecode(i).lower()
+                t_ingr = re.search("ingr",txt_to_search)
+                t_val = re.search("val", txt_to_search)
+                if t_ingr:
+                    ingredients.append(cleaner(i))
                 if t_val:
                     valeurs_nutritives.append(i)
-        valeurs_nutritives = list(set(valeurs_nutritives))
-            # valeurs_non_classees.split(" ")
-        # print(ingredients)
-        # print(valeurs_nutritives)
-        # for nutriment in all:
-        #     for valeur in valeurs_non_classees:
-        #         if valeur.find(nutriment):
-        #             t = re.search("[0-9].*", valeur)
-        #             if t:
-        #                 valeurs_nutritives[nutriment].append(t.group())
+                for j in all:
+                    t_val = re.search(j, txt_to_search)
+                    if t_val:
+                        valeurs_nutritives.append(i)
+            valeurs_nutritives = list(set(valeurs_nutritives))
+                # valeurs_non_classees.split(" ")
+            # print(ingredients)
+            # print(valeurs_nutritives)
+            # for nutriment in all:
+            #     for valeur in valeurs_non_classees:
+            #         if valeur.find(nutriment):
+            #             t = re.search("[0-9].*", valeur)
+            #             if t:
+            #                 valeurs_nutritives[nutriment].append(t.group())
+        except:
+            ingredients = "impossible d'accéder aux crédits d'authentification"
+            valeurs_nutritives = "impossible d'accéder aux crédits d'authentification"
     else:
         Text = pytesseract.image_to_string(img)
         Text_splitted = Text.split('\n')
