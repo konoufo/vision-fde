@@ -1,14 +1,31 @@
-# GEL3021D4E1
+## GEL3021D4E1
 DESIGN IV - projet Ali Quebec
 
-## Dépendances à installer: 
-> pip install -r requirements.txt
+# Dépendances à installer: 
+Creer un virtual environment pour isoler localement nos packages et nos dépendences
+``` bash
+python3 -m venv env
+```
+``` bash
+source env/bin/activate  # On Windows, use .\venv\scripts\activate.bat
+```
+```bash
+pip install -r requirements.txt
+```
+## Tesseract
+installer tesseract dans le repertoire par défaut C:\Program Files\Tesseract-OCR ou alors le changer dans detect.py.
 
+https://github.com/UB-Mannheim/tesseract/wiki
+
+## Clé cloudinary
+Rajouter dans les variables d'environnement la clé cloudinary 
 ## Fichiers .weights pour la détections de logos
 https://drive.google.com/drive/folders/1bdG7JC8ITShO2RIjrGs-FbZtlANxaoBk?usp=sharing
 
 # Lancer le serveur en local
-> python manage.py runserver
+```bash
+python manage.py runserver
+```
 
 # Utilisation 1 - GUI
 
