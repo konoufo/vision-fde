@@ -15,11 +15,8 @@ class ImageForm(forms.ModelForm):
     #     self.fields['image'].required = True
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        for field in self.Meta.required:
-            self.fields[field].required = False
+        self.fields["image"].required = True
 
     class Meta:
         model = Image
         fields = ('image',)
-        required = ('image',)

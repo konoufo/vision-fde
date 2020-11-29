@@ -151,3 +151,9 @@ CACHES = {
     }
 }
 
+#Google Drive OCR vars
+# SCOPES = 'https://www.googleapis.com/auth/drive'
+# CLIENT_SECRET_FILE = os.path.join(BASE_DIR,'main', 'Vision', 'ReconnaissanceDeTexte','credentials.json')
+CLIENT_SECRET_FILE_SERVICEACCOUNT = os.path.join(BASE_DIR,'main', 'Vision', 'ReconnaissanceDeTexte','credentials_compte_service.json')
+# APPLICATION_NAME = 'Drive API Python Quickstart'
+

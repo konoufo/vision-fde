@@ -49,3 +49,9 @@ vine==5.0.0
 wcwidth==0.2.5
 whitenoise==5.2.0
 zipp==3.4.0
+
+google-api-python-client==1.7.9
+google-auth-httplib2==0.0.3
+google-auth-oauthlib==0.4.0
+httplib2==0.18.1
+oauth2client~=4.1.3

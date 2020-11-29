@@ -2,11 +2,11 @@ import requests
 import json
 
 #en deploimement
-uri = "https://alivisiond4.herokuapp.com"
+# uri = "https://alivisiond4.herokuapp.com"
 #en local
-# uri = "http://127.0.0.1:8000"
+uri = "http://127.0.0.1:8000"
 
-file_path = "../media/images/Produit04 (1).jpeg"
+file_path = "../media/images/produit02.jpg"
 def requete_post(file_path=None, url=None):
     files = {}
     headers = {}

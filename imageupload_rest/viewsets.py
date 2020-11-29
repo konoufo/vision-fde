@@ -49,7 +49,7 @@ class UploadImageViewset(viewsets.ModelViewSet):
             logos_detectes.append(logo1)
             logos_detectes.append(logo2)
 
-            img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img, fast=1)
+            img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img, using_gd_ocr=1, fichier=image)
 
             response = {'statut': 'success', 'Ingrédients': ingredients,'Valeurs nutritives': valeurs_nutritives, 'img_proc_logos': logos_detectes}
 

@@ -17,12 +17,12 @@ from .Vision.ReconnaissanceParCodeBarre import barcode
 def image_upload_view(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
-        form = ImageForm(request.POST)
-
-        image = request.FILES.get("image")
-        image_stream = BytesIO(image.read())
+        form = ImageForm(request.POST, request.FILES)
 
         if form.is_valid():
+            #formulaires invalides sinon
+            image = request.FILES.get("image")
+            image_stream = BytesIO(image.read())
             obj = form.save(commit=False)
             obj.image = None
 
@@ -73,7 +73,7 @@ def image_upload_view(request):
                 logos_detectes.append(logo1)
                 logos_detectes.append(logo2)
 
-                img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img_proc, fast=s)
+                img_proc, Text, valeurs_nutritives, ingredients = detect.detect_VN_ING(img_file=img_proc, using_gd_ocr=s, fichier=image)
 
             img_proc = cv2.imencode(".png", img_proc)[1].tobytes()
             result = cloudinary.uploader.upload(img_proc, public_id=obj.image_id + "proc", overwrite=True)
@@ -92,4 +92,5 @@ def image_upload_view(request):
                            })
     else:
         form = ImageForm()
+    print(form.errors)
     return render(request, 'main/index.html', {'form': form})
